@@ -31,7 +31,10 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
+# Secrets live ONLY in .env.local (never committed, never NEXT_PUBLIC_ prefixed).
 .env*
+
+# Commit the placeholder template only:
 
 # vercel
 .vercel
