@@ -1,0 +1,2 @@
+ALTER TABLE "orders" DROP CONSTRAINT "orders_fulfilled_requires_success_check";--> statement-breakpoint
+ALTER TABLE "orders" ADD CONSTRAINT "orders_fulfilled_requires_success_check" CHECK ((not "orders"."fulfilled") or "orders"."payment_status" in ('success','refunded'));
