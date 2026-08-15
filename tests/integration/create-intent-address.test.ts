@@ -79,7 +79,7 @@ describe.skipIf(!hasDb)('POST /api/checkout/create-intent (shipping address)', (
   it('creates an order + normalized snapshot for a valid address', async () => {
     const { email } = await makeVerifiedUser();
 
-    const res = await POST(req({ email, shippingAddress: ADDRESS }));
+    const res = await POST(req({ email, shippingAddress: ADDRESS, quantity: 1 }));
     expect(res.status).toBe(200);
     const body = await res.json();
     createdOrderIds.push(body.orderId);
@@ -99,24 +99,50 @@ describe.skipIf(!hasDb)('POST /api/checkout/create-intent (shipping address)', (
     expect(snap.phone).toBe('+15551234567'); // = WhatsApp number
   });
 
-  it('rejects an out-of-allow-list country with 422 (no order)', async () => {
-    const { email, id } = await makeVerifiedUser();
-    const res = await POST(req({ email, shippingAddress: { ...ADDRESS, country: 'ZZ' } }));
-    expect(res.status).toBe(422);
-    expect(await orderCountForUser(id)).toHaveLength(0);
+  it('prices the order from the chosen quantity (server-authoritative)', async () => {
+    const { email } = await makeVerifiedUser();
+
+    const res = await POST(req({ email, shippingAddress: ADDRESS, quantity: 3 }));
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    createdOrderIds.push(body.orderId);
+
+    const { eq } = await import('drizzle-orm');
+    const [order] = await db.select().from(orders).where(eq(orders.id, body.orderId));
+    expect(order.quantity).toBe(3);
+    expect(order.amount).toBe(PRODUCT.unitAmount * 3);
   });
 
-  it('rejects a postal code that is invalid for the country with 422 (no order)', async () => {
+  it('accepts a country that is not in the old allow-list (no allow-list now)', async () => {
+    const { email } = await makeVerifiedUser();
+    const res = await POST(
+      req({ email, shippingAddress: { ...ADDRESS, country: 'DE' }, quantity: 1 })
+    );
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    createdOrderIds.push(body.orderId);
+  });
+
+  it('rejects an unknown country code with 400 (Zod structural floor)', async () => {
     const { email, id } = await makeVerifiedUser();
-    const res = await POST(req({ email, shippingAddress: { ...ADDRESS, postalCode: 'ABChjk' } }));
-    expect(res.status).toBe(422);
+    const res = await POST(
+      req({ email, shippingAddress: { ...ADDRESS, country: 'ZZ' }, quantity: 1 })
+    );
+    expect(res.status).toBe(400);
     expect(await orderCountForUser(id)).toHaveLength(0);
   });
 
   it('rejects a malformed body (missing required field) with 400', async () => {
     const { email } = await makeVerifiedUser();
-    const { recipientName: _omit, ...noName } = ADDRESS;
-    const res = await POST(req({ email, shippingAddress: noName }));
+    const noName = { ...ADDRESS } as Partial<typeof ADDRESS>;
+    delete noName.recipientName;
+    const res = await POST(req({ email, shippingAddress: noName, quantity: 1 }));
+    expect(res.status).toBe(400);
+  });
+
+  it('rejects a request with no quantity with 400', async () => {
+    const { email } = await makeVerifiedUser();
+    const res = await POST(req({ email, shippingAddress: ADDRESS }));
     expect(res.status).toBe(400);
   });
 });

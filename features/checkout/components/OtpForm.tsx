@@ -10,6 +10,9 @@ interface OtpFormProps {
   submitting: boolean;
   resending: boolean;
   serverError: string | null;
+  // Neutral informational message (not an error) — e.g. when the customer is
+  // sent back here to re-verify because their verification expired at pay time.
+  notice?: string | null;
 }
 
 interface OtpFormValues {
@@ -23,6 +26,7 @@ export default function OtpForm({
   submitting,
   resending,
   serverError,
+  notice,
 }: OtpFormProps) {
   const {
     register,
@@ -42,6 +46,12 @@ export default function OtpForm({
 
   return (
     <form onSubmit={handleSubmit(onValid)} className="space-y-4 text-left">
+      {notice && (
+        <p className="font-body text-sm text-ink bg-wattle/20 border border-wattle rounded-[4px] px-3 py-2">
+          {notice}
+        </p>
+      )}
+
       <p className="font-body text-sm text-ink/70">
         We sent a 6-digit code to <span className="text-ink">{email}</span>.
       </p>

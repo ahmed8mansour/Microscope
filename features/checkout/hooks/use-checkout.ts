@@ -7,6 +7,18 @@ interface ApiErrorBody {
   error?: { code: string; message: string };
 }
 
+// Carries the server's error `code` (e.g. "not_verified") alongside the
+// message, so callers can branch on the specific failure — the re-verify
+// fallback needs to tell `not_verified` apart from a generic error.
+export class ApiError extends Error {
+  readonly code: string | null;
+  constructor(message: string, code: string | null) {
+    super(message);
+    this.name = "ApiError";
+    this.code = code;
+  }
+}
+
 async function postJson<T>(url: string, body: unknown): Promise<T> {
   const res = await fetch(url, {
     method: "POST",
@@ -15,7 +27,10 @@ async function postJson<T>(url: string, body: unknown): Promise<T> {
   });
   const data = (await res.json().catch(() => ({}))) as T & ApiErrorBody;
   if (!res.ok) {
-    throw new Error(data?.error?.message ?? "Something went wrong. Please try again.");
+    throw new ApiError(
+      data?.error?.message ?? "Something went wrong. Please try again.",
+      data?.error?.code ?? null
+    );
   }
   return data;
 }
@@ -36,7 +51,11 @@ export function useVerifyOtp() {
 
 export function useCreateIntent() {
   return useMutation({
-    mutationFn: (input: { email: string; shippingAddress: ShippingAddressInput }) =>
+    mutationFn: (input: {
+      email: string;
+      shippingAddress: ShippingAddressInput;
+      quantity: number;
+    }) =>
       postJson<{ clientSecret: string; orderId: string; paymentIntentId: string }>(
         "/api/checkout/create-intent",
         input

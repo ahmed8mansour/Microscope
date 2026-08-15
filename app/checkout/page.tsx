@@ -4,17 +4,15 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import ContactForm from "@/features/checkout/components/ContactForm";
 import OtpForm from "@/features/checkout/components/OtpForm";
-import AddressForm from "@/features/checkout/components/AddressForm";
-import { useCreateIntent, useSendOtp, useVerifyOtp } from "@/features/checkout/hooks/use-checkout";
+import { useSendOtp, useVerifyOtp } from "@/features/checkout/hooks/use-checkout";
 import { useConfirm } from "@/features/payment/hooks/use-confirm";
 import type { ContactInput } from "@/features/checkout/schemas/checkout.schema";
-import type { ShippingAddressInput } from "@/features/shipping";
-import PaymentForm from "@/features/payment/components/PaymentForm";
+import PayStep from "@/features/payment/components/PayStep";
 import { formatPrice } from "@/lib/config/product";
 import { getWhatsAppSupportUrl } from "@/lib/config/support";
 import { trackFunnelEvent } from "@/features/analytics/lib/track";
 
-type Step = "contact" | "otp" | "verified" | "address" | "payment" | "confirm";
+type Step = "contact" | "otp" | "pay" | "confirm";
 
 function CheckoutFlow() {
   const searchParams = useSearchParams();
@@ -29,13 +27,16 @@ function CheckoutFlow() {
 
   const [step, setStep] = useState<Step>(() => (isReturn ? "confirm" : "contact"));
   const [contact, setContact] = useState<ContactInput | null>(null);
-  // Quantity is chosen on the payment step (feature 005); the server re-prices
-  // the intent as it changes. Held here so the confirmation view can show it.
+  // Quantity is chosen on the pay step (feature 005) before the intent is
+  // created, so it never triggers a server re-price. Held here so the
+  // confirmation view can show it.
   const [quantity, setQuantity] = useState(1);
+  // Set when the customer is bounced back to the OTP step because their
+  // verification expired (or was already spent) at pay time.
+  const [reverifyNotice, setReverifyNotice] = useState<string | null>(null);
 
   const sendOtp = useSendOtp();
   const verifyOtp = useVerifyOtp();
-  const createIntent = useCreateIntent();
   const confirm = useConfirm();
 
   // On a 3-D Secure return, confirm server-side and strip the secret from the
@@ -52,6 +53,7 @@ function CheckoutFlow() {
 
   function handleContactSubmit(input: ContactInput) {
     setContact(input);
+    setReverifyNotice(null);
     sendOtp.mutate(input, { onSuccess: () => setStep("otp") });
   }
 
@@ -59,7 +61,15 @@ function CheckoutFlow() {
     if (!contact) return;
     verifyOtp.mutate(
       { email: contact.email, code },
-      { onSuccess: () => setStep("verified") }
+      {
+        onSuccess: () => {
+          setReverifyNotice(null);
+          setStep("pay");
+          // Funnel: pay step presented (FR-027). The address + quantity + card
+          // now live on one screen; the intent is created when they pay.
+          trackFunnelEvent("payment");
+        },
+      }
     );
   }
 
@@ -68,30 +78,25 @@ function CheckoutFlow() {
     sendOtp.mutate(contact);
   }
 
-  function handleAddressSubmit(shippingAddress: ShippingAddressInput) {
+  // Pay-time verification expired (or was already consumed): re-send a fresh
+  // code and drop the customer back on the OTP step with an explanation, rather
+  // than dead-ending them on the pay screen.
+  function handleNeedsReverify() {
     if (!contact) return;
-    // Address is collected before the intent; the server validates + normalizes
-    // it, snapshots it, and creates the order/intent (feature 005). Quantity is
-    // chosen next, on the payment step.
-    createIntent.mutate(
-      { email: contact.email, shippingAddress },
-      {
-        onSuccess: (data) => {
-          setStep("payment");
-          // Funnel: payment step presented (FR-027).
-          trackFunnelEvent("payment", { orderId: data.orderId });
-        },
-      }
+    sendOtp.mutate(contact);
+    setReverifyNotice(
+      "Your verification expired for security. We've sent a new code — enter it to finish paying."
     );
+    setStep("otp");
   }
 
   // Inline confirmation (no redirect): server-verify before showing success —
-  // never trust the client-side result on its own. The client secret travels
-  // in the POST body (via useConfirm), not the URL.
-  function handlePaid(paymentIntentId: string) {
-    if (!createIntent.data) return;
+  // never trust the client-side result on its own. The client secret is minted
+  // at pay time (PayStep) and travels in the POST body (via useConfirm), not the
+  // URL.
+  function handlePaid(paymentIntentId: string, clientSecret: string) {
     setStep("confirm");
-    confirm.mutate({ paymentIntentId, clientSecret: createIntent.data.clientSecret });
+    confirm.mutate({ paymentIntentId, clientSecret });
   }
 
   return (
@@ -116,38 +121,16 @@ function CheckoutFlow() {
             submitting={verifyOtp.isPending}
             resending={sendOtp.isPending}
             serverError={verifyOtp.isError ? verifyOtp.error.message : null}
+            notice={reverifyNotice}
           />
         )}
 
-        {step === "verified" && (
-          <div className="space-y-4">
-            <p className="font-body text-ink">
-              You&rsquo;re verified. Next, tell us where to ship your order.
-            </p>
-            <button
-              type="button"
-              onClick={() => setStep("address")}
-              className="w-full inline-flex items-center justify-center px-6 py-3 bg-cinnabar text-paper-bone font-body font-medium rounded-[4px] transition-opacity hover:opacity-90 disabled:opacity-50 cursor-pointer"
-            >
-              Add shipping address
-            </button>
-          </div>
-        )}
-
-        {step === "address" && (
-          <AddressForm
-            onSubmit={handleAddressSubmit}
-            submitting={createIntent.isPending}
-            serverError={createIntent.isError ? createIntent.error.message : null}
-          />
-        )}
-
-        {step === "payment" && createIntent.data && (
-          <PaymentForm
-            clientSecret={createIntent.data.clientSecret}
-            paymentIntentId={createIntent.data.paymentIntentId}
-            onConfirmed={handlePaid}
+        {step === "pay" && contact && (
+          <PayStep
+            email={contact.email}
+            onPaid={handlePaid}
             onQuantityChange={setQuantity}
+            onNeedsReverify={handleNeedsReverify}
           />
         )}
 

@@ -5,7 +5,6 @@ import {
   ADDRESS_FIELDS,
   ADDRESS_FORM_FIELDS,
 } from '@/features/shipping';
-import { isShippableCountry, isValidPostalCode } from '@/lib/config/shipping';
 
 const valid = {
   recipientName: 'Jane Doe',
@@ -29,6 +28,24 @@ describe('shippingAddressSchema (structural)', () => {
 
   it('rejects a country that is not a 2-letter code', () => {
     expect(() => shippingAddressSchema.parse({ ...valid, country: 'USA' })).toThrow();
+  });
+
+  it('rejects a 2-letter code that is not a real country', () => {
+    expect(() => shippingAddressSchema.parse({ ...valid, country: 'ZZ' })).toThrow();
+  });
+
+  it('accepts any real shipping country (no allow-list)', () => {
+    expect(() => shippingAddressSchema.parse({ ...valid, country: 'DE' })).not.toThrow();
+    expect(() => shippingAddressSchema.parse({ ...valid, country: 'JP' })).not.toThrow();
+  });
+
+  it('requires a suburb of at least 2 characters', () => {
+    expect(() => shippingAddressSchema.parse({ ...valid, city: 'M' })).toThrow();
+    expect(() => shippingAddressSchema.parse({ ...valid, city: 'x'.repeat(65) })).toThrow();
+  });
+
+  it('accepts any non-empty postal code (no per-country format)', () => {
+    expect(() => shippingAddressSchema.parse({ ...valid, postalCode: 'SW1A 1AA' })).not.toThrow();
   });
 
   it('allows an omitted line2', () => {
@@ -91,20 +108,5 @@ describe('normalizeAddress (Zod-only, deterministic)', () => {
       postalCode: '3000',
     });
     expect(n.line2).toBe('Unit 4');
-  });
-});
-
-describe('ships-to allow-list + postal format', () => {
-  it('gates on the allow-list', () => {
-    expect(isShippableCountry('AU')).toBe(true);
-    expect(isShippableCountry('ZZ')).toBe(false);
-  });
-
-  it('validates postal format per country', () => {
-    expect(isValidPostalCode('AU', '3000')).toBe(true);
-    expect(isValidPostalCode('AU', '30')).toBe(false);
-    expect(isValidPostalCode('US', '90210')).toBe(true);
-    expect(isValidPostalCode('US', 'ABCDE')).toBe(false);
-    expect(isValidPostalCode('ZZ', '3000')).toBe(false);
   });
 });

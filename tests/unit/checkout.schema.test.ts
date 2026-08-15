@@ -60,17 +60,37 @@ describe('createIntentRequestSchema', () => {
     postalCode: '3000',
   };
 
-  it('accepts email + shipping address (server derives price)', () => {
+  it('accepts email + shipping address + quantity (server derives price)', () => {
     const parsed = createIntentRequestSchema.parse({
       email: 'buyer@example.com',
       shippingAddress: address,
+      quantity: 2,
     });
     expect(parsed.email).toBe('buyer@example.com');
     expect(parsed.shippingAddress.country).toBe('AU');
+    expect(parsed.quantity).toBe(2);
   });
 
   it('requires a shipping address', () => {
-    expect(createIntentRequestSchema.safeParse({ email: 'buyer@example.com' }).success).toBe(false);
+    expect(
+      createIntentRequestSchema.safeParse({ email: 'buyer@example.com', quantity: 1 }).success
+    ).toBe(false);
+  });
+
+  it('requires a quantity', () => {
+    expect(
+      createIntentRequestSchema.safeParse({ email: 'buyer@example.com', shippingAddress: address })
+        .success
+    ).toBe(false);
+  });
+
+  it('rejects a non-positive or non-integer quantity', () => {
+    expect(
+      createIntentRequestSchema.safeParse({ email: 'buyer@example.com', shippingAddress: address, quantity: 0 }).success
+    ).toBe(false);
+    expect(
+      createIntentRequestSchema.safeParse({ email: 'buyer@example.com', shippingAddress: address, quantity: 1.5 }).success
+    ).toBe(false);
   });
 
   it('rejects a client-supplied amount rather than trusting it (strict)', () => {
@@ -79,6 +99,7 @@ describe('createIntentRequestSchema', () => {
     const parsed = createIntentRequestSchema.safeParse({
       email: 'buyer@example.com',
       shippingAddress: address,
+      quantity: 1,
       amount: 1,
     });
     expect(parsed.success).toBe(false);

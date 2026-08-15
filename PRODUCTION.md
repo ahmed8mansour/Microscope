@@ -19,7 +19,7 @@ email, database, security, and the legal/policy pages you must add before sellin
 | Database | Supabase PostgreSQL via Drizzle ORM (postgres.js, transaction pooler :6543) |
 | Payments | Stripe (Payment Intents + webhooks) |
 | Email | SendGrid (checkout OTP code only) |
-| Address check | Zod schema + ships-to / postal-format rules (`features/shipping`, `lib/config/shipping.ts`) — no external API |
+| Address entry | Google Places **Autocomplete** on the checkout street field (client-side); server validation is Zod-only |
 | Product | **Single product**, AUD **$59.00** (`lib/config/product.ts`) |
 | Fulfillment | Manual dropship — admin records supplier (Alibaba/AliExpress) order + tracking |
 | Admin | One shared password + HMAC session cookie (no user accounts) |
@@ -42,6 +42,7 @@ production. Never commit real values. Only `NEXT_PUBLIC_*` vars reach the browse
 | `STRIPE_SECRET_KEY` | server-only | Stripe API key | Switch `sk_test_…` → **`sk_live_…`** |
 | `STRIPE_WEBHOOK_SECRET` | server-only | Verifies Stripe webhook signatures | Use the **live** endpoint's `whsec_…` (different from the CLI one) |
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | **public (by design)** | Browser Stripe.js/Elements | Switch `pk_test_…` → **`pk_live_…`** |
+| `NEXT_PUBLIC_GOOGLE_PLACES_KEY` | **public (by design)** | Checkout street-address autocomplete (Places API) | Referrer-lock to your domain + restrict to Places API. Optional — field degrades to plain text if unset |
 | `SENDGRID_API_KEY` | server-only | Sends the OTP email | Restrict the key to "Mail Send" only |
 | `SENDGRID_FROM_EMAIL` | server-only | OTP "from" address | Must be a **verified sender / authenticated domain** |
 | `NEXT_PUBLIC_WHATSAPP_SUPPORT` | public | Support number on success page | Real support number, digits e.g. `61400000000` |
@@ -86,13 +87,27 @@ leaks it to every visitor. The only intentionally-public secret is the Stripe
 > measured as *accepted by SendGrid*, not inbox delivery — so deliverability
 > (domain auth) is on you.
 
-### 2.4 Address validation (no external service)
-Shipping addresses are validated **in-app** — no third-party API, no key, nothing
-to provision. A Zod schema (`features/shipping/schemas/address.schema.ts`) enforces
-the structural floor, and the route checks the ships-to allow-list + per-country
-postal format (`lib/config/shipping.ts`). To change which countries you ship to or
-tighten postal rules, edit `lib/config/shipping.ts` — that's a config/business
-decision, not a code change.
+### 2.4 Google Places — address autocomplete
+The checkout **street-address** field uses Google Places Autocomplete (New) to
+suggest addresses and auto-fill suburb / state / postcode / country.
+
+1. In Google Cloud, enable the **Places API (New)** and create an API key.
+2. This key is used in the **browser**, so it's `NEXT_PUBLIC_GOOGLE_PLACES_KEY`.
+   Lock it down: **HTTP-referrer restriction** to your domain(s) + **API
+   restriction** to Places API only. The referrer lock is what protects a key
+   that's visible in the page source.
+3. **Billing:** typing (autocomplete session) is free; a **Place Details** call
+   fires when the user picks an address — **10,000 free per month**, then $5 per
+   1,000. Realistically $0/month at launch scale. Use of session tokens is built
+   in, so you're billed one Place Details per completed address, not per keystroke.
+4. **Optional / graceful degradation:** if the key is missing or Places fails to
+   load, the street field becomes a plain text input and checkout still works.
+
+There is **no server-side address validation API** and **no ships-to allow-list**.
+The server does Zod-only structural validation
+(`features/shipping/schemas/address.schema.ts`): required fields, lengths, and a
+real ISO country code. Countries and their state dropdowns live in
+`lib/config/countries.ts` and `lib/config/subdivisions.ts`.
 
 ### 2.5 Vercel (hosting)
 - Import the repo, framework auto-detected as Next.js.
@@ -276,7 +291,7 @@ Legal (blocking):
 Functional smoke test on the live domain:
 - [ ] Landing → checkout → OTP email → payment (real card) → success page.
 - [ ] Order appears in `/admin`; refund works; fulfillment fields save.
-- [ ] Address validation rejects a bad address (bad postal code / non-shipped country) and accepts a good one.
+- [ ] Street-address autocomplete suggests and auto-fills a real address (with `NEXT_PUBLIC_GOOGLE_PLACES_KEY` set); the country dropdown and country-driven state field work.
 - [ ] Webhook events show up (Stripe dashboard → Events → delivered 200).
 
 ---
@@ -299,7 +314,8 @@ Functional smoke test on the live domain:
 |---|---|
 | Env template | `.env.example` |
 | Product price / currency | `lib/config/product.ts` |
-| Ships-to countries + postal formats | `lib/config/shipping.ts` |
+| Country list (checkout dropdown) | `lib/config/countries.ts` |
+| State / province dropdowns | `lib/config/subdivisions.ts` |
 | Reporting timezone | `lib/config/analytics.ts` |
 | Support number | `lib/config/support.ts` |
 | DB schema | `lib/db/schema.ts` |
@@ -307,7 +323,8 @@ Functional smoke test on the live domain:
 | Stripe provider | `lib/payments/providers/stripe.ts` |
 | Stripe webhook route | `app/api/webhooks/stripe/route.ts` |
 | Email (OTP) | `lib/email/sendgrid.ts` |
-| Address validation (Zod + config) | `features/shipping/schemas/address.schema.ts`, `lib/config/shipping.ts` |
+| Address schema (server, Zod-only) | `features/shipping/schemas/address.schema.ts` |
+| Places autocomplete (client) | `features/checkout/lib/places.ts`, `features/checkout/components/StreetAutocomplete.tsx` |
 | Admin auth gate | `proxy.ts`, `lib/auth/session.ts` |
 | Refund eligibility | `features/admin/domain/refund-policy.ts` |
 | OTP policy | `features/checkout/domain/otp.ts` |

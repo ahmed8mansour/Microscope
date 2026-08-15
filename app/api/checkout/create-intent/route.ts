@@ -5,9 +5,8 @@ import { getUserByEmail, consumeFreshVerification } from '@/features/checkout/da
 import { createOrder, attachPaymentReference, ConflictError } from '@/features/orders';
 import { createSnapshot } from '@/features/shipping/data/shipping-address.repository';
 import { normalizeAddress } from '@/features/shipping';
-import { isShippableCountry, isValidPostalCode } from '@/lib/config/shipping';
 import { createPaymentIntent } from '@/lib/payments';
-import { PRODUCT } from '@/lib/config/product';
+import { PRODUCT, computeAmount } from '@/lib/config/product';
 import { errorResponse, parseJsonBody } from '../_lib/respond';
 
 export const runtime = 'nodejs';
@@ -20,26 +19,20 @@ export async function POST(request: Request): Promise<Response> {
   if (!parsed.success) {
     return errorResponse(400, 'invalid_input', parsed.error.issues.map((i) => i.message).join('; '));
   }
-  const { email, shippingAddress } = parsed.data;
+  const { email, shippingAddress, quantity } = parsed.data;
 
-  // Ships-to allow-list + per-country postal format (422 — distinct from a 400
-  // malformed body). No user/verification needed for this check.
-  if (
-    !isShippableCountry(shippingAddress.country) ||
-    !isValidPostalCode(shippingAddress.country, shippingAddress.postalCode)
-  ) {
-    return errorResponse(422, 'address_invalid', 'We can’t ship to this address.');
-  }
+  // No ships-to allow-list or postal-format gate anymore: the Zod schema above
+  // is the only address check (Places autocomplete keeps real input clean).
 
   const user = await getUserByEmail(email);
   if (!user) {
     return errorResponse(403, 'not_verified', 'Email must be verified before payment');
   }
 
-  // Zod-only validation (structural + allow-list + postal, checked above) plus
-  // deterministic normalization — no external validation provider. The supplier
-  // order is placed manually from the copy-ready panel, so the stored snapshot
-  // just needs to be clean and AliExpress-field-shaped (FR-006/FR-007).
+  // Zod-only structural validation (checked above) plus deterministic
+  // normalization — no external validation provider. The supplier order is
+  // placed manually from the copy-ready panel, so the stored snapshot just
+  // needs to be clean and AliExpress-field-shaped (FR-006/FR-007).
   const normalized = normalizeAddress(shippingAddress);
 
   // Per-checkout verification (spec 002/003): authorize this payment only if
@@ -51,13 +44,16 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   try {
-    // Server-authoritative price (FR-002). Order starts at quantity 1; the
-    // customer adjusts it on the payment step (re-price via /update-quantity).
+    // Server-authoritative price (FR-002): the total is derived from the
+    // customer's chosen quantity, never read from the request. The quantity is
+    // final by the time this runs — it was picked on the pay screen before the
+    // intent existed — so there is no post-creation re-price.
+    const amount = computeAmount(quantity);
     const order = await createOrder({
       userId: user.id,
-      amount: PRODUCT.unitAmount,
+      amount,
       currency: PRODUCT.currency,
-      quantity: 1,
+      quantity,
     });
 
     // Per-order address snapshot (FR-006/FR-007) — normalized values; the
@@ -66,7 +62,7 @@ export async function POST(request: Request): Promise<Response> {
 
     const intent = await createPaymentIntent({
       orderId: order.id,
-      amount: PRODUCT.unitAmount,
+      amount,
       currency: PRODUCT.currency,
     });
 
