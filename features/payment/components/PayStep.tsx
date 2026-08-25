@@ -160,7 +160,7 @@ function PayInner({ email, onPaid, onQuantityChange, onNeedsReverify }: PayStepP
           {submitting ? "Processing…" : `Pay ${formatAmountShort(total)} ${PRODUCT.currency}`}
         </button>
 
-        {error && <p className="text-sm text-cinnabar">{error}</p>}
+        {error && <p className="text-sm text-danger">{error}</p>}
       </form>
     </FormProvider>
   );

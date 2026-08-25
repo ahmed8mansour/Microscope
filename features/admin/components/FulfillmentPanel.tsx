@@ -116,7 +116,7 @@ export default function FulfillmentPanel({
           type="button"
           onClick={handleSubmit}
           disabled={fulfill.isPending}
-          className="admin-focus rounded-lg bg-eucalypt px-4 py-2 text-sm font-medium text-paper-bone transition-opacity hover:opacity-90 disabled:opacity-40"
+          className="admin-focus rounded-lg bg-cinnabar px-4 py-2 text-sm font-medium text-paper-bone transition-opacity hover:opacity-90 disabled:opacity-40"
         >
           {fulfill.isPending
             ? 'Saving…'
@@ -125,7 +125,7 @@ export default function FulfillmentPanel({
               : 'Record refs & mark fulfilled'}
         </button>
         {fulfill.isError && (
-          <p className="text-sm text-cinnabar">{(fulfill.error as Error).message}</p>
+          <p className="text-sm text-danger">{(fulfill.error as Error).message}</p>
         )}
       </div>
     </article>

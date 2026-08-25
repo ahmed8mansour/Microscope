@@ -23,7 +23,7 @@ export default function OrderDetail({ orderId }: { orderId: string }) {
       </div>
     );
   }
-  if (isError || !data) return <p className="text-sm text-cinnabar">Failed to load order.</p>;
+  if (isError || !data) return <p className="text-sm text-danger">Failed to load order.</p>;
 
   const { order, notes, refund, shippingAddress } = data;
   const statusStyle = STATUS_STYLES[order.paymentStatus];
@@ -80,7 +80,7 @@ export default function OrderDetail({ orderId }: { orderId: string }) {
               type="button"
               onClick={() => fulfill.mutate(undefined)}
               disabled={fulfill.isPending || order.fulfilled}
-              className="admin-focus rounded-lg bg-eucalypt px-4 py-2 text-sm font-medium text-paper-bone transition-opacity hover:opacity-90 disabled:opacity-40"
+              className="admin-focus rounded-lg bg-cinnabar px-4 py-2 text-sm font-medium text-paper-bone transition-opacity hover:opacity-90 disabled:opacity-40"
             >
               {order.fulfilled ? '✓ Fulfilled' : fulfill.isPending ? 'Marking…' : 'Mark fulfilled'}
             </button>
@@ -97,7 +97,7 @@ export default function OrderDetail({ orderId }: { orderId: string }) {
                 <>Refunded — requested {new Date(refund.createdAt).toLocaleString('en-AU')}.</>
               )}
               {refund.status === 'failed' && (
-                <span className="text-cinnabar">
+                <span className="text-danger">
                   Refund attempt failed: {refund.failureMessage ?? 'unknown error'}
                 </span>
               )}
@@ -141,7 +141,7 @@ export default function OrderDetail({ orderId }: { orderId: string }) {
           placeholder="Add an internal note…"
           className="admin-focus w-full rounded-lg border border-ink/15 bg-paper-raised p-3 text-sm text-ink placeholder:text-ink/40 focus:border-ink/40 focus:outline-none"
         />
-        {noteError && <p className="mt-1 text-sm text-cinnabar">{noteError}</p>}
+        {noteError && <p className="mt-1 text-sm text-danger">{noteError}</p>}
         <button
           type="button"
           onClick={handleAddNote}
@@ -175,7 +175,7 @@ function Field({
             href={link}
             target="_blank"
             rel="noopener noreferrer"
-            className="admin-focus text-eucalypt underline underline-offset-2"
+            className="admin-focus text-mauve-300 underline underline-offset-2"
           >
             {value}
           </a>

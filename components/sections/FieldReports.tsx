@@ -1,5 +1,7 @@
 "use client";
 
+import { useReveal } from "@/lib/useReveal";
+
 const testimonials = [
   {
     date: "09.MAR.2026",
@@ -25,30 +27,32 @@ const testimonials = [
 ];
 
 export default function FieldReports() {
+  const ref = useReveal<HTMLDivElement>();
   return (
     <section
       id="field-reports"
-      className="relative bg-eucalypt text-paper-bone py-[var(--space-9)] md:py-[var(--space-10)]"
+      className="relative bg-eucalypt text-ink py-[var(--space-9)] md:py-[var(--space-10)]"
     >
       <div className="w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+        <div ref={ref} className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
           {testimonials.map((t, i) => (
             <div
               key={i}
-              className="border border-paper-bone/15 p-6 md:p-8"
+              data-reveal
+              className="border border-ink/15 p-6 md:p-8"
             >
-              <div className="text-caption text-paper-bone/50 mb-1">
+              <div className="text-caption text-ink/50 mb-1">
                 FIELD REPORT &middot; {t.date}
               </div>
-              <div className="text-caption text-paper-bone/40 mb-6">
+              <div className="text-caption text-ink/40 mb-6">
                 Verified purchase &middot; {t.location}
               </div>
 
-              <blockquote className="font-body text-base md:text-lg text-paper-bone/90 leading-relaxed mb-6">
+              <blockquote className="font-body text-base md:text-lg text-ink/90 leading-relaxed mb-6">
                 {t.quote}
               </blockquote>
 
-              <p className="font-body text-sm text-paper-bone/60">
+              <p className="font-body text-sm text-ink/60">
                 &mdash; {t.name}
               </p>
             </div>

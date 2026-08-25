@@ -1,42 +1,92 @@
 "use client";
 
+import { useRef } from "react";
 import Link from "next/link";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 import Eyebrow from "@/components/ui/Eyebrow";
 import CTAButton from "@/components/ui/CTAButton";
+import Marquee from "@/components/ui/Marquee";
 
 export default function Hero() {
+  const rootRef = useRef<HTMLElement>(null);
+
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
+  // Creative on-load: the big lines rise + sharpen from a blur, staggered, then
+  // the CTA settles in. The horizontal drift (CSS marquee) runs underneath.
+  useGSAP(
+    () => {
+      const rows = rootRef.current?.querySelectorAll("[data-hero-row]");
+      const cta = rootRef.current?.querySelectorAll("[data-hero-cta]");
+      const all = [...(rows ? Array.from(rows) : []), ...(cta ? Array.from(cta) : [])];
+      if (!all.length) return;
+
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        gsap.set(all, { opacity: 1, y: 0, filter: "none" });
+        return;
+      }
+
+      const tl = gsap.timeline({ onComplete: () => gsap.set(all, { clearProps: "filter" }) });
+      if (rows?.length) {
+        tl.from(rows, {
+          opacity: 0,
+          yPercent: 45,
+          filter: "blur(18px)",
+          duration: 1.1,
+          ease: "power3.out",
+          stagger: 0.14,
+        }, 0);
+      }
+      if (cta?.length) {
+        tl.from(cta, {
+          opacity: 0,
+          y: 20,
+          filter: "blur(8px)",
+          duration: 0.8,
+          ease: "power3.out",
+          stagger: 0.1,
+        }, 0.55);
+      }
+    },
+    { scope: rootRef }
+  );
+
   return (
-    <section id="hero" className="relative min-h-dvh flex items-start lg:items-center bg-paper-bone overflow-hidden">
-      <div className="w-full max-w-7xl mx-auto px-5 sm:px-8 md:px-12 lg:px-16 pt-[40vh] sm:pt-[48vh] pb-[var(--space-9)] md:pb-[var(--space-10)] lg:pt-[var(--space-10)]">
-        {/* Phone: full-width, left-aligned. Tablet: centered gallery column. Desktop: left column beside the product. */}
-        <div className="max-w-xl sm:max-w-2xl sm:mx-auto sm:text-center lg:max-w-lg lg:mx-0 lg:text-left">
-          <Eyebrow className="mb-6">A FIELD MICROSCOPE FOR CURIOUS KIDS</Eyebrow>
+    <section
+      id="hero"
+      ref={rootRef}
+      className="relative min-h-dvh overflow-hidden bg-paper-bone"
+    >
+      {/* Kinetic type — slides horizontally BEHIND the centred product (which is
+          the fixed 3D canvas above this layer). */}
+      <div className="absolute inset-0 z-0 flex flex-col justify-center gap-[4vh] md:gap-[5vh]">
+        <div data-hero-row>
+          <Marquee text="LOOK CLOSER" dur={42} dir="right" className="hero-line hero-line--outline" />
+        </div>
+        <div data-hero-row>
+          <Marquee text="THE UNSEEN WORLD" dur={30} dir="right" className="hero-line hero-line--solid" />
+        </div>
+        <div data-hero-row>
+          <Marquee text="A TINY WORLD" dur={50} dir="right" className="hero-line hero-line--outline" />
+        </div>
+      </div>
 
-          <h1 className="text-h1 text-ink mb-6">
-            The world your kid isn&rsquo;t looking at yet.
-          </h1>
-
-          <p className="text-lead text-ink/80 mb-10 max-w-md sm:mx-auto lg:mx-0">
-            A real digital microscope, built to survive a backyard. Screen on
-            top. Wonder inside.
-          </p>
-
-          <div className="flex flex-wrap items-center gap-6 justify-start sm:justify-center lg:justify-start">
-            <CTAButton onClick={() => scrollTo("discovery")}>
-              See what it sees &rarr;
-            </CTAButton>
-
-            <Link
-              href="/checkout"
-              className="font-body text-ink underline decoration-wattle decoration-2 underline-offset-4 transition-opacity hover:opacity-70 cursor-pointer"
-            >
-              Or shop now
-            </Link>
-          </div>
+      {/* Action layer — above the product. */}
+      <div className="absolute inset-x-0 bottom-[7vh] z-40 flex flex-col items-center gap-6 px-6 text-center">
+        <Eyebrow data-hero-cta>A MICROSCOPE FOR CURIOUS KIDS</Eyebrow>
+        <div data-hero-cta className="flex flex-wrap items-center justify-center gap-6">
+          <CTAButton onClick={() => scrollTo("discovery")}>
+            Start focusing &darr;
+          </CTAButton>
+          <Link
+            href="/checkout"
+            className="font-body text-ink underline decoration-mauve-400 decoration-2 underline-offset-4 transition-opacity hover:opacity-70 cursor-pointer"
+          >
+            Or shop now
+          </Link>
         </div>
       </div>
 

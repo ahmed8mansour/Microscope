@@ -27,7 +27,7 @@ export default function AdminDashboardPage() {
 
       {isLoading && <LoadingState />}
       {isError && !isLoading && (
-        <div className="admin-card p-6 text-sm text-cinnabar">
+        <div className="admin-card p-6 text-sm text-danger">
           Couldn&rsquo;t load the dashboard metrics. Try refreshing.
         </div>
       )}

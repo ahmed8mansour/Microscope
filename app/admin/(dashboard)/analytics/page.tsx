@@ -39,7 +39,7 @@ export default function AdminAnalyticsPage() {
         </div>
       )}
       {isError && !isLoading && (
-        <div className="admin-card p-6 text-sm text-cinnabar">Failed to load analytics.</div>
+        <div className="admin-card p-6 text-sm text-danger">Failed to load analytics.</div>
       )}
       {data && <AnalyticsCharts series={data} />}
     </div>

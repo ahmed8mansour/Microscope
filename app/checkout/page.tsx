@@ -155,7 +155,7 @@ function ConfirmView({
     return (
       <div className="space-y-4">
         <p className="font-body text-ink">We couldn&rsquo;t confirm this payment.</p>
-        <p className="text-sm text-ink/60">{confirm.error.message}</p>
+        <p className="text-sm text-danger">{confirm.error.message}</p>
         <SupportButton />
       </div>
     );
@@ -234,7 +234,7 @@ function SupportButton() {
       href={getWhatsAppSupportUrl()}
       target="_blank"
       rel="noopener noreferrer"
-      className="mt-6 inline-flex items-center justify-center px-6 py-3 bg-eucalypt text-paper-bone font-body font-medium rounded-[4px] transition-opacity hover:opacity-90"
+      className="mt-6 inline-flex items-center justify-center px-6 py-3 bg-cinnabar text-paper-bone font-body font-medium rounded-[4px] transition-opacity hover:opacity-90"
     >
       Contact support on WhatsApp
     </a>

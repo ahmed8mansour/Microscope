@@ -49,7 +49,7 @@ export default function RefundButton({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="rounded border border-red-300 px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-50"
+        className="rounded border border-cinnabar/40 px-4 py-2 text-sm font-medium text-cinnabar transition-colors hover:bg-cinnabar/10"
       >
         Refund
       </button>
@@ -59,13 +59,13 @@ export default function RefundButton({
           role="dialog"
           aria-modal="true"
           aria-labelledby="refund-dialog-title"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4"
         >
-          <div className="w-full max-w-sm rounded-lg bg-white p-5 shadow-lg">
-            <h3 id="refund-dialog-title" className="mb-2 text-base font-semibold text-neutral-900">
+          <div className="w-full max-w-sm rounded-lg bg-[var(--paper-raised)] p-5 shadow-[var(--elev-3)]">
+            <h3 id="refund-dialog-title" className="mb-2 text-base font-semibold text-ink">
               Refund this order?
             </h3>
-            <p className="mb-4 text-sm text-neutral-600">
+            <p className="mb-4 text-sm text-ink/70">
               This will refund <strong>{formatMoney(amount, currency)}</strong> to the
               customer&rsquo;s original payment method. This cannot be undone.
             </p>
@@ -76,10 +76,10 @@ export default function RefundButton({
               maxLength={500}
               rows={2}
               placeholder="Reason (optional)"
-              className="mb-3 w-full rounded border border-neutral-300 p-2 text-sm focus:border-neutral-500 focus:outline-none"
+              className="mb-3 w-full rounded border border-ink/15 bg-transparent p-2 text-sm text-ink focus:border-ink/40 focus:outline-none"
             />
             {refund.isError && (
-              <p role="alert" className="mb-3 text-sm text-red-600">
+              <p role="alert" className="mb-3 text-sm text-danger">
                 {refund.error.message}
               </p>
             )}
@@ -89,7 +89,7 @@ export default function RefundButton({
                 type="button"
                 onClick={() => setOpen(false)}
                 disabled={refund.isPending}
-                className="rounded border border-neutral-300 px-3 py-1.5 text-sm hover:bg-neutral-100 disabled:opacity-50"
+                className="rounded border border-ink/20 px-3 py-1.5 text-sm text-ink hover:bg-ink/5 disabled:opacity-50"
               >
                 Cancel
               </button>
@@ -97,7 +97,7 @@ export default function RefundButton({
                 type="button"
                 onClick={handleConfirm}
                 disabled={refund.isPending}
-                className="rounded bg-red-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-50"
+                className="rounded bg-cinnabar px-3 py-1.5 text-sm font-medium text-paper-bone transition-colors hover:bg-cinnabar/90 disabled:opacity-50"
               >
                 {refund.isPending ? 'Refunding…' : 'Confirm refund'}
               </button>
