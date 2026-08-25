@@ -6,6 +6,7 @@
   --eucalypt: #2D4A3A;
   --wattle: #E8A33D;
   --cinnabar: #B84931;
+  --danger: #C0362C;   /* validation / error red — stays red in every theme */
 
   --space-1: 4px;
   --space-2: 8px;
@@ -23,6 +24,36 @@
   --dur-fast: 200ms;
   --dur-med: 400ms;
   --dur-slow: 800ms;
+
+  /* Landing radius scale (replaces one-off rounded-[4px]). */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  /* Paper-tuned elevation — warm shadows, not neutral gray. */
+  --elev-1: 0 1px 0 rgba(27, 27, 27, 0.08);
+  --elev-2: 0 6px 20px -12px rgba(27, 27, 27, 0.35);
+  --elev-3: 0 18px 40px -20px rgba(27, 27, 27, 0.45);
+
+  /* Wattle is bright enough for fills/on-dark, but fails contrast as small
+     text on paper. This darker cousin is for wattle-coloured text on bone. */
+  --wattle-ink: #9A6A16;
+
+  /* --- Premium dark-mauve accent system ("The Focus") -------------------
+     Additive; only consumed inside the landing dark scope, so the shared
+     light surfaces (checkout/admin/legal) are unaffected. Mauve = the glow
+     of what the lens reveals. */
+  --mauve-200: #ECD9FF;   /* glow core / highlight */
+  --mauve-300: #E0AFFF;   /* accent text on dark (~10:1 on ground) */
+  --mauve-400: #CBA6F7;   /* PRIMARY — CTAs, active, rim light */
+  --mauve-500: #B084E9;   /* hover / deep accent */
+  --mauve-700: #6E4C9E;   /* decorative deep */
+  --champagne: #E9D8B0;   /* rare warm spark — specimen data only */
+
+  --glow-mauve:  radial-gradient(closest-side, rgba(203, 166, 247, 0.35), transparent 70%);
+  --glow-accent: 0 0 24px -4px rgba(203, 166, 247, 0.5);
 }
 
 @theme inline {
@@ -31,10 +62,127 @@
   --color-eucalypt: var(--eucalypt);
   --color-wattle: var(--wattle);
   --color-cinnabar: var(--cinnabar);
+  --color-danger: var(--danger);
 
   --font-display: var(--font-fraunces);
   --font-body: var(--font-instrument);
   --font-mono: var(--font-mono);
+
+  --color-wattle-ink: var(--wattle-ink);
+
+  --color-mauve-200: var(--mauve-200);
+  --color-mauve-300: var(--mauve-300);
+  --color-mauve-400: var(--mauve-400);
+  --color-mauve-500: var(--mauve-500);
+  --color-mauve-700: var(--mauve-700);
+  --color-champagne: var(--champagne);
+  --color-accent-ink: var(--accent-ink);
+
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-pill: var(--radius-pill);
+}
+
+/* ============================================================
+   Landing theme — "The Focus" (premium black · mauve · white).
+   Scoped to the landing only (data-theme="dark" on <main>), so shared
+   checkout / admin / legal surfaces keep the light paper palette. These
+   overrides re-point the SAME role tokens the landing already uses, so every
+   bg-paper-bone / text-ink / bg-eucalypt utility resolves to the dark-mauve
+   value with no per-element churn. Mauve is used sparingly — CTAs, glow,
+   active states, the model's rim light — never on body text.
+   ============================================================ */
+:root[data-theme="dark"] {
+  --paper-bone: #0E0C14;   /* page ground — near-black, violet undertone */
+  --ink:        #F5F2FA;   /* primary text — soft white (~17:1 on ground) */
+  --eucalypt:   #1A1626;   /* raised panel band */
+  --wattle:     #CBA6F7;   /* accent fill (mauve) */
+  --wattle-ink: #E0AFFF;   /* accent text (mauve) */
+  --cinnabar:   #CBA6F7;   /* primary CTA fill (mauve) */
+  --accent-ink: #0E0C14;   /* text ON the mauve CTA (near-black) */
+  --danger:     #F87171;   /* error red, brightened for the dark ground */
+
+  /* Layered surfaces for panels / cards / dock frames. */
+  --surface:    #14111C;
+  --raised:     #1A1626;
+  --card:       #221C30;
+  --line:       #2E2640;
+
+  /* Dark, mauve-tinted elevation (overrides the warm light shadows). */
+  --elev-1: 0 1px 0 rgba(255, 255, 255, 0.04);
+  --elev-2: 0 10px 30px -12px rgba(0, 0, 0, 0.7);
+  --elev-3: 0 24px 60px -24px rgba(0, 0, 0, 0.8);
+
+  /* Admin "ledger" surfaces + ink-alpha hairlines, re-pointed for dark so the
+     admin / checkout / legal routes flip to the same theme as the landing. */
+  --paper-surface: #14111C;
+  --paper-raised: #1A1626;
+  --ink-70: rgba(245, 242, 250, 0.70);
+  --ink-55: rgba(245, 242, 250, 0.55);
+  --ink-14: rgba(245, 242, 250, 0.14);
+  --ink-08: rgba(245, 242, 250, 0.08);
+}
+
+/* Dark-theme fixes for shared rules that hardcode the light ink or use eucalypt
+   as an accent — hairlines go light, links/focus use mauve. */
+[data-theme="dark"] .divider { border-bottom-color: rgba(245, 242, 250, 0.14); }
+[data-theme="dark"] .paper-shadow { box-shadow: 0 1px 0 0 rgba(245, 242, 250, 0.06); }
+[data-theme="dark"] .legal-prose { color: rgba(245, 242, 250, 0.80); }
+[data-theme="dark"] .legal-prose a { color: var(--mauve-300); }
+[data-theme="dark"] .legal-prose a:hover { color: var(--mauve-400); }
+[data-theme="dark"] .admin-card--link:hover {
+  border-color: rgba(245, 242, 250, 0.28);
+  box-shadow: 0 14px 30px -18px rgba(0, 0, 0, 0.6);
+}
+[data-theme="dark"] .admin-focus:focus-visible { outline-color: var(--mauve-400); }
+
+/* Rack-focus reveal — targets default to sharp (fully readable without JS);
+   useRackFocus starts them blurred + dim, then racks them into focus on
+   scroll. Reduced-motion keeps them sharp. */
+[data-focus] {
+  will-change: filter, opacity, transform;
+}
+
+/* Mauve text-selection on the dark landing (overrides the light-theme rule). */
+[data-theme="dark"] ::selection {
+  background: var(--mauve-400);
+  color: var(--accent-ink);
+}
+
+/* --- Kinetic hero marquee -------------------------------------------------
+   Two identical copies of a line translate by exactly one copy width for a
+   seamless horizontal loop; direction + speed are set per row via CSS vars.
+   The rows sit BEHIND the centred 3D product, so the type slides past it. */
+@keyframes marquee-x {
+  from { transform: translate3d(var(--mq-from, 0), 0, 0); }
+  to   { transform: translate3d(var(--mq-to, -50%), 0, 0); }
+}
+.marquee-row {
+  animation: marquee-x var(--mq-dur, 30s) linear infinite;
+}
+
+.hero-line {
+  font-family: var(--font-fraunces), "Fraunces", serif;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  font-weight: 300;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  font-size: 16vw;
+  white-space: nowrap;
+}
+@media (min-width: 768px) {
+  .hero-line { font-size: 11vw; }
+}
+.hero-line--solid { color: var(--ink); }
+.hero-line--outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--mauve-500);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-row { animation: none; transform: translateX(0); }
 }
 
 html {

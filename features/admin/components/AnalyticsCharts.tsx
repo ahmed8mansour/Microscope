@@ -1,12 +1,12 @@
 import type { AnalyticsSeriesResponse } from '../types';
 import { formatMoney, formatPercent } from '../lib/format';
 
-const SOURCE_SWATCHES = ['var(--eucalypt)', 'var(--wattle)', 'var(--cinnabar)', 'rgba(27,27,27,0.45)'];
+const SOURCE_SWATCHES = ['var(--mauve-400)', 'var(--champagne)', 'var(--mauve-300)', 'rgba(245,242,250,0.4)'];
 
 function BarChart({
   points,
   formatValue,
-  color = 'var(--eucalypt)',
+  color = 'var(--mauve-400)',
 }: {
   points: Array<{ date: string; value: number }>;
   formatValue: (value: number) => string;
@@ -62,8 +62,8 @@ export default function AnalyticsCharts({ series }: { series: AnalyticsSeriesRes
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <StatTile label="Payment success" value={formatPercent(series.paymentSuccessRate)} accent="var(--eucalypt)" />
-        <StatTile label="Conversion" value={formatPercent(series.conversionRate)} accent="var(--cinnabar)" />
+        <StatTile label="Payment success" value={formatPercent(series.paymentSuccessRate)} accent="var(--mauve-400)" />
+        <StatTile label="Conversion" value={formatPercent(series.conversionRate)} accent="var(--champagne)" />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -75,7 +75,7 @@ export default function AnalyticsCharts({ series }: { series: AnalyticsSeriesRes
           <BarChart
             points={series.revenueOverTime.map((p) => ({ date: p.date, value: p.amount }))}
             formatValue={(v) => formatMoney(v)}
-            color="var(--eucalypt)"
+            color="var(--mauve-400)"
           />
         </article>
 
@@ -87,7 +87,7 @@ export default function AnalyticsCharts({ series }: { series: AnalyticsSeriesRes
           <BarChart
             points={series.ordersPerDay.map((p) => ({ date: p.date, value: p.count }))}
             formatValue={(v) => String(v)}
-            color="var(--wattle)"
+            color="var(--champagne)"
           />
         </article>
       </div>

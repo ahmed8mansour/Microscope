@@ -68,10 +68,10 @@ export default function OtpForm({
           {...register("code")}
           className="w-full border border-ink/20 rounded-[4px] px-3 py-2 font-utility text-ink text-lg tracking-widest bg-paper-bone focus:outline-none focus:border-cinnabar"
         />
-        {errors.code && <p className="text-sm text-cinnabar mt-1">{errors.code.message}</p>}
+        {errors.code && <p className="text-sm text-danger mt-1">{errors.code.message}</p>}
       </div>
 
-      {serverError && <p className="text-sm text-cinnabar">{serverError}</p>}
+      {serverError && <p className="text-sm text-danger">{serverError}</p>}
 
       <button
         type="submit"

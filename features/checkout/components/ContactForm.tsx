@@ -44,7 +44,7 @@ export default function ContactForm({ onSubmit, submitting, serverError }: Conta
           {...register("email")}
           className="w-full border border-ink/20 rounded-[4px] px-3 py-2 font-body text-ink bg-paper-bone focus:outline-none focus:border-cinnabar"
         />
-        {errors.email && <p className="text-sm text-cinnabar mt-1">{errors.email.message}</p>}
+        {errors.email && <p className="text-sm text-danger mt-1">{errors.email.message}</p>}
       </div>
 
       <div>
@@ -59,11 +59,11 @@ export default function ContactForm({ onSubmit, submitting, serverError }: Conta
           className="w-full border border-ink/20 rounded-[4px] px-3 py-2 font-body text-ink bg-paper-bone focus:outline-none focus:border-cinnabar"
         />
         {errors.whatsapp && (
-          <p className="text-sm text-cinnabar mt-1">{errors.whatsapp.message}</p>
+          <p className="text-sm text-danger mt-1">{errors.whatsapp.message}</p>
         )}
       </div>
 
-      {serverError && <p className="text-sm text-cinnabar">{serverError}</p>}
+      {serverError && <p className="text-sm text-danger">{serverError}</p>}
 
       <button
         type="submit"

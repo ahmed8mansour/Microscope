@@ -34,11 +34,11 @@ function RevenueBand({ revenue }: { revenue: DashboardMetrics['revenue'] }) {
   const month = formatMoneyParts(revenue.month, revenue.currency);
 
   return (
-    <section className="on-dark relative overflow-hidden rounded-lg bg-eucalypt text-paper-bone shadow-[0_18px_40px_-24px_rgba(27,27,27,0.6)]">
+    <section className="on-dark relative overflow-hidden rounded-lg bg-eucalypt text-ink shadow-[0_18px_40px_-24px_rgba(27,27,27,0.6)]">
       {/* concentric-lens motif etched into the panel */}
       <svg
         aria-hidden
-        className="pointer-events-none absolute -right-16 -top-16 h-80 w-80 text-paper-bone/10"
+        className="pointer-events-none absolute -right-16 -top-16 h-80 w-80 text-ink/10"
         viewBox="0 0 200 200"
         fill="none"
         stroke="currentColor"
@@ -51,25 +51,25 @@ function RevenueBand({ revenue }: { revenue: DashboardMetrics['revenue'] }) {
 
       <div className="relative p-6 sm:p-8">
         <div className="flex items-center justify-between">
-          <span className="ledger-label text-paper-bone/70">Revenue · All time</span>
-          <span className="flex items-center gap-2 text-paper-bone/70">
+          <span className="ledger-label text-ink/70">Revenue · All time</span>
+          <span className="flex items-center gap-2 text-ink/70">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-wattle opacity-70" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-wattle" />
             </span>
-            <span className="specimen-index text-paper-bone/70">Net of refunds</span>
+            <span className="specimen-index text-ink/70">Net of refunds</span>
           </span>
         </div>
 
         <div className="mt-3 flex items-baseline gap-1">
-          <span className="font-display text-2xl text-paper-bone/70 sm:text-3xl">{all.symbol}</span>
+          <span className="font-display text-2xl text-ink/70 sm:text-3xl">{all.symbol}</span>
           <span className="font-display tabular text-5xl font-medium leading-none sm:text-7xl">
             {all.amount}
           </span>
-          <span className="ml-2 font-display text-lg text-paper-bone/60">{revenue.currency}</span>
+          <span className="ml-2 font-display text-lg text-ink/60">{revenue.currency}</span>
         </div>
 
-        <div className="mt-6 flex flex-wrap gap-x-10 gap-y-3 border-t border-paper-bone/20 pt-4">
+        <div className="mt-6 flex flex-wrap gap-x-10 gap-y-3 border-t border-ink/20 pt-4">
           <SubFigure label="Today" symbol={today.symbol} amount={today.amount} />
           <SubFigure label="This month" symbol={month.symbol} amount={month.amount} />
         </div>
@@ -81,9 +81,9 @@ function RevenueBand({ revenue }: { revenue: DashboardMetrics['revenue'] }) {
 function SubFigure({ label, symbol, amount }: { label: string; symbol: string; amount: string }) {
   return (
     <div>
-      <div className="ledger-label text-paper-bone/60">{label}</div>
+      <div className="ledger-label text-ink/60">{label}</div>
       <div className="mt-1 flex items-baseline gap-0.5 font-display text-2xl">
-        <span className="text-paper-bone/60">{symbol}</span>
+        <span className="text-ink/60">{symbol}</span>
         <span className="tabular">{amount}</span>
       </div>
     </div>

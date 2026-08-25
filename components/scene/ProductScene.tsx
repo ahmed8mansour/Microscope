@@ -1,8 +1,33 @@
 "use client";
 
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useThree } from "@react-three/fiber";
 import ScrollProduct from "./ScrollProduct";
+import { useScrollStore } from "@/lib/store";
+
+// On-demand render driver. With frameloop="demand" the scene only renders when
+// invalidate() is called — so we invalidate while the page is actively
+// scrolling (plus a short settle tail for the pose lerp) and while the hero
+// idle-spin is running. Once past the hero and idle, rendering stops entirely.
+function InvalidateDriver({ reducedMotion }: { reducedMotion: boolean }) {
+  const invalidate = useThree((s) => s.invalidate);
+  useEffect(() => {
+    let raf = 0;
+    const loop = () => {
+      const st = useScrollStore.getState();
+      const scrolledRecently = performance.now() - st.lastInputAt < 400;
+      const vh = window.innerHeight || 1;
+      const totalVh = (document.documentElement.scrollHeight || vh) / vh;
+      // Model is animated in the hero and again near the offer (bottom).
+      const active = !reducedMotion && (st.scrollProgress < 1.25 || st.scrollProgress > totalVh - 2.1);
+      if (scrolledRecently || active) invalidate();
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, [invalidate, reducedMotion]);
+  return null;
+}
 
 type R3FState = {
   gl: { domElement: HTMLCanvasElement };
@@ -36,10 +61,27 @@ export default function ProductScene() {
       }
     };
     sync();
+    // R3F sizes the canvas from its own measurement, which can miss the first
+    // paint here (the canvas is left at its 300×150 default until something
+    // triggers a remeasure). Nudge with a synthetic resize until the canvas
+    // matches the wrapper, then stop — self-terminating, no ongoing cost.
+    let kick = 0;
+    const start = performance.now();
+    const ensureSized = () => {
+      const canvas = el.querySelector("canvas");
+      const rect = el.getBoundingClientRect();
+      const sized = canvas && canvas.clientWidth >= rect.width - 2;
+      if (!sized && rect.width > 0) window.dispatchEvent(new Event("resize"));
+      if (!sized && performance.now() - start < 2000) {
+        kick = window.setTimeout(ensureSized, 120);
+      }
+    };
+    kick = window.setTimeout(ensureSized, 60);
     const ro = new ResizeObserver(sync);
     ro.observe(el);
     window.addEventListener("resize", sync);
     return () => {
+      clearTimeout(kick);
       ro.disconnect();
       window.removeEventListener("resize", sync);
     };
@@ -48,12 +90,17 @@ export default function ProductScene() {
   const onCreated = useCallback((state: R3FState) => {
     stateRef.current = state;
     const el = wrapperRef.current;
-    if (el) {
+    const apply = () => {
+      if (!el) return;
       const rect = el.getBoundingClientRect();
       if (rect.width > 0 && rect.height > 0) {
         state.setSize(rect.width, rect.height);
       }
-    }
+    };
+    apply();
+    // In frameloop="demand" the size only commits on a render frame; force one
+    // on the next frame so the canvas isn't left at its 300×150 default at load.
+    requestAnimationFrame(apply);
   }, []);
 
   if (!mounted) return null;
@@ -69,6 +116,7 @@ export default function ProductScene() {
       }}
     >
       <Canvas
+        frameloop="demand"
         camera={{ position: [0, 0, 5], fov: 45 }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
         dpr={[1, 1.5]}
@@ -80,11 +128,12 @@ export default function ProductScene() {
           pointerEvents: "none",
         }}
       >
-        <ambientLight intensity={0.8} />
-        <hemisphereLight args={["#ffffff", "#b0a58c", 0.6]} />
-        <directionalLight position={[5, 6, 5]} intensity={1.4} />
-        <directionalLight position={[-5, 2, 3]} intensity={0.6} />
-        <directionalLight position={[0, -3, -5]} intensity={0.3} />
+        {/* Dark, moody key + a mauve rim from behind = premium edge glow. */}
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[3, 5, 4]} intensity={1.2} color="#ffffff" />
+        <directionalLight position={[-5, 1, -3]} intensity={2.4} color="#CBA6F7" />
+        <directionalLight position={[0, -2, 2]} intensity={0.4} color="#E0AFFF" />
+        <InvalidateDriver reducedMotion={reducedMotion} />
         <Suspense fallback={null}>
           <ScrollProduct reducedMotion={reducedMotion} />
         </Suspense>

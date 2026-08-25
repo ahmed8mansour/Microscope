@@ -28,7 +28,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           <div className="flex items-center gap-2.5">
             <span
               aria-hidden
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-eucalypt text-paper-bone"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cinnabar text-paper-bone"
             >
               {/* Aperture / lens mark — nods to the microscope. */}
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">

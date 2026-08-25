@@ -70,7 +70,7 @@ export default function AddressFields() {
             </option>
           ))}
         </select>
-        {errors.country && <p className="text-sm text-cinnabar mt-1">{errors.country.message}</p>}
+        {errors.country && <p className="text-sm text-danger mt-1">{errors.country.message}</p>}
       </div>
 
       {/* Full name */}
@@ -85,7 +85,7 @@ export default function AddressFields() {
           className={FIELD_CLASS}
         />
         {errors.recipientName && (
-          <p className="text-sm text-cinnabar mt-1">{errors.recipientName.message}</p>
+          <p className="text-sm text-danger mt-1">{errors.recipientName.message}</p>
         )}
       </div>
 
@@ -109,7 +109,7 @@ export default function AddressFields() {
             />
           )}
         />
-        {errors.line1 && <p className="text-sm text-cinnabar mt-1">{errors.line1.message}</p>}
+        {errors.line1 && <p className="text-sm text-danger mt-1">{errors.line1.message}</p>}
       </div>
 
       {/* Apt / suite / unit */}
@@ -123,7 +123,7 @@ export default function AddressFields() {
           {...register("line2")}
           className={FIELD_CLASS}
         />
-        {errors.line2 && <p className="text-sm text-cinnabar mt-1">{errors.line2.message}</p>}
+        {errors.line2 && <p className="text-sm text-danger mt-1">{errors.line2.message}</p>}
       </div>
 
       {/* Suburb + State (side by side on wider screens) */}
@@ -138,7 +138,7 @@ export default function AddressFields() {
             {...register("city")}
             className={FIELD_CLASS}
           />
-          {errors.city && <p className="text-sm text-cinnabar mt-1">{errors.city.message}</p>}
+          {errors.city && <p className="text-sm text-danger mt-1">{errors.city.message}</p>}
         </div>
 
         <div>
@@ -167,7 +167,7 @@ export default function AddressFields() {
               className={FIELD_CLASS}
             />
           )}
-          {errors.state && <p className="text-sm text-cinnabar mt-1">{errors.state.message}</p>}
+          {errors.state && <p className="text-sm text-danger mt-1">{errors.state.message}</p>}
         </div>
       </div>
 
@@ -183,7 +183,7 @@ export default function AddressFields() {
           className={FIELD_CLASS}
         />
         {errors.postalCode && (
-          <p className="text-sm text-cinnabar mt-1">{errors.postalCode.message}</p>
+          <p className="text-sm text-danger mt-1">{errors.postalCode.message}</p>
         )}
       </div>
 

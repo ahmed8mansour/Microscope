@@ -1,14 +1,14 @@
 "use client";
 
-interface EyebrowProps {
+interface EyebrowProps extends React.HTMLAttributes<HTMLSpanElement> {
   children: React.ReactNode;
-  className?: string;
 }
 
-export default function Eyebrow({ children, className = "" }: EyebrowProps) {
+export default function Eyebrow({ children, className = "", ...rest }: EyebrowProps) {
   return (
     <span
-      className={`text-caption text-wattle inline-block ${className}`}
+      className={`text-caption text-wattle-ink inline-block ${className}`}
+      {...rest}
     >
       {children}
     </span>

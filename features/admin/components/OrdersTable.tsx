@@ -95,7 +95,7 @@ export default function OrdersTable() {
         <Segmented label="Fulfilment" value={fulfilled} options={FULFILLED_OPTIONS} onChange={setFulfilled} />
       </div>
 
-      {isError && <p className="mb-3 text-sm text-cinnabar">Failed to load orders.</p>}
+      {isError && <p className="mb-3 text-sm text-danger">Failed to load orders.</p>}
 
       <div className="admin-card overflow-hidden p-0">
         <div className="overflow-x-auto">
@@ -138,7 +138,7 @@ export default function OrdersTable() {
                   <td className="px-4 py-3 text-sm text-ink/70">
                     {order.fulfilled ? (
                       <span className="inline-flex items-center gap-1.5">
-                        <span className="h-1.5 w-1.5 rounded-full bg-eucalypt" />
+                        <span className="h-1.5 w-1.5 rounded-full bg-mauve-400" />
                         Yes
                       </span>
                     ) : (

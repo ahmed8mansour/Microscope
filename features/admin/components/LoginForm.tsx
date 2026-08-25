@@ -34,7 +34,7 @@ export default function LoginForm() {
         <div className="mb-6 flex flex-col items-center text-center">
           <span
             aria-hidden
-            className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-eucalypt text-paper-bone"
+            className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-cinnabar text-paper-bone"
           >
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
               <circle cx="12" cy="12" r="8" />
@@ -63,14 +63,14 @@ export default function LoginForm() {
             className="admin-focus w-full rounded-lg border border-ink/15 bg-paper-raised px-3 py-2.5 text-sm text-ink placeholder:text-ink/40 focus:border-ink/40 focus:outline-none"
           />
           {errorMessage && (
-            <p role="alert" className="mt-3 text-sm text-cinnabar">
+            <p role="alert" className="mt-3 text-sm text-danger">
               {errorMessage}
             </p>
           )}
           <button
             type="submit"
             disabled={login.isPending || formState.isSubmitting}
-            className="admin-focus mt-4 w-full rounded-lg bg-ink px-4 py-2.5 text-sm font-medium text-paper-bone transition-opacity hover:opacity-90 disabled:opacity-50"
+            className="admin-focus mt-4 w-full rounded-lg bg-cinnabar px-4 py-2.5 text-sm font-medium text-paper-bone transition-opacity hover:opacity-90 disabled:opacity-50"
           >
             {login.isPending ? 'Verifying…' : 'Enter'}
           </button>

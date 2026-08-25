@@ -1,12 +1,11 @@
 "use client";
 
-interface SpecimenTagProps {
+interface SpecimenTagProps extends React.HTMLAttributes<HTMLDivElement> {
   number: string;
   latin: string;
   common: string;
   magnification?: string;
   location?: string;
-  className?: string;
 }
 
 export default function SpecimenTag({
@@ -16,10 +15,11 @@ export default function SpecimenTag({
   magnification,
   location,
   className = "",
+  ...rest
 }: SpecimenTagProps) {
   return (
-    <div className={`max-w-sm ${className}`}>
-      <p className="text-caption text-wattle mb-1">{number}</p>
+    <div className={`max-w-sm ${className}`} {...rest}>
+      <p className="text-caption text-wattle-ink mb-1">{number}</p>
       <p className="font-display italic text-lg md:text-xl">{latin}</p>
       <p className="font-body text-base opacity-80">{common}</p>
       <div className="w-full h-px bg-ink/40 my-3" />
