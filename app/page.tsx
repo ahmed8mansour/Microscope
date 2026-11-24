@@ -37,7 +37,7 @@ export default function Home() {
       <FocusHUD />
       <NotebookOverlay />
       <ProductScene />
-      <main data-theme="dark" className="relative isolate bg-paper-bone">
+      <main data-theme="dark" className="relative bg-paper-bone">
         <TintBackdrop />
         <Hero />
         <Premise />

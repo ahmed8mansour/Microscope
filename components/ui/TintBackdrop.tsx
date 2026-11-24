@@ -36,7 +36,7 @@ export default function TintBackdrop() {
       ref={rootRef}
       aria-hidden
       data-tint="mint"
-      className="tint-backdrop pointer-events-none fixed inset-0 -z-10"
+      className="tint-backdrop pointer-events-none fixed inset-0 z-0"
     >
       {TINTS.map((t) => (
         <div key={t} data-layer={t} className="tint-layer absolute inset-0" />
