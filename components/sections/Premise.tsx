@@ -31,7 +31,7 @@ export default function Premise() {
         className="pointer-events-none absolute left-1/2 top-[24vh] h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 md:left-[78%] md:top-1/2 md:h-[400px] md:w-[400px]"
       >
         <div className="absolute inset-0 rounded-full bg-[#CDEFE0]" />
-        <div className="absolute -inset-[72px] rounded-full border-2 border-leaf-accent/35" />
+        <div className="absolute -inset-[72px] hidden rounded-full border-2 border-leaf-accent/35 md:block" />
         <div className="absolute -inset-[144px] hidden rounded-full border-2 border-leaf-accent/20 md:block" />
         <span className={`${BADGE} -left-4 top-2`} style={{ ["--dur" as string]: "6s" }}>
           <svg {...ICON}>
