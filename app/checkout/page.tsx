@@ -100,10 +100,21 @@ function CheckoutFlow() {
   }
 
   return (
-    <main className="min-h-dvh flex items-center justify-center bg-paper-bone px-6 py-16">
+    <main className="leaf-scope leaf-tint-mint min-h-dvh flex items-center justify-center px-6 py-16">
       <div className="max-w-md w-full text-center">
         <h1 className="text-h2 text-ink mb-2">Checkout</h1>
-        <p className="font-body text-ink/70 mb-8">The Field Microscope &mdash; {formatPrice()}</p>
+        {/* Product summary card — the same line as before, in a card. */}
+        <div className="mx-auto mb-8 inline-flex items-center gap-3 rounded-full border border-[color:var(--leaf-card-border)] bg-white px-4 py-2 shadow-[var(--leaf-card-shadow)]">
+          <span className="inline-flex h-9 w-9 flex-none items-center justify-center rounded-full bg-leaf-chip text-leaf-accent">
+            <svg viewBox="0 0 24 24" width={18} height={18} fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="m7.5 4.27 9 5.15" />
+              <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+              <path d="m3.3 7 8.7 5 8.7-5" />
+              <path d="M12 22V12" />
+            </svg>
+          </span>
+          <p className="font-body text-ink/80">The Field Microscope &mdash; {formatPrice()}</p>
+        </div>
 
         {step === "contact" && (
           <ContactForm
