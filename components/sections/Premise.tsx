@@ -34,7 +34,7 @@ export default function Premise() {
           right half — see ScrollProduct) with three floating icon badges. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-[24vh] h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 md:left-[78%] md:top-1/2 md:h-[400px] md:w-[400px]"
+        className="pointer-events-none absolute left-1/2 top-[24vh] h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 md:left-[calc(50%_+_48.3vh)] md:top-1/2 md:h-[400px] md:w-[400px]"
       >
         <div className="absolute inset-0 rounded-full bg-[#CDEFE0]" />
         <span className="nb-tape left-1/2 -top-3 hidden -translate-x-1/2 -rotate-3 md:block" />
