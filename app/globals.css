@@ -225,6 +225,48 @@
     radial-gradient(820px 620px at 4% 100%, var(--leaf-glow-mint-b) 0%, transparent 60%);
 }
 
+.leaf-tint-lime {
+  background-color: var(--leaf-tint-lime);
+  background-image:
+    radial-gradient(900px 620px at 92% 4%, var(--leaf-glow-lime) 0%, transparent 62%),
+    radial-gradient(820px 620px at 4% 100%, #CDF2DF 0%, transparent 60%);
+}
+
+/* Buy: viewfinder brackets that tighten, cell burst, blur-to-sharp on hover. */
+@keyframes leaf-lock {
+  0% { transform: scale(1.22); opacity: 0; }
+  25% { opacity: 1; }
+  60%, 100% { transform: scale(1); opacity: 1; }
+}
+@keyframes leaf-burst {
+  0% { transform: translate(0, 0) scale(0.3); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(1) rotate(var(--rot)); opacity: 0; }
+}
+@keyframes leaf-focus {
+  0% { filter: blur(6px); transform: scale(0.97); }
+  100% { filter: blur(0); transform: scale(1); }
+}
+.leaf-bracket {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border: 3px solid var(--leaf-accent);
+  pointer-events: none;
+  animation: leaf-lock 3s ease-out infinite;
+}
+.leaf-cell {
+  border: 2px solid var(--leaf-ink);
+  opacity: 0;
+  animation: leaf-burst 3.2s ease-out infinite;
+  animation-delay: var(--del);
+}
+.leaf-buy:hover { animation: leaf-focus 0.5s ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  .leaf-bracket, .leaf-cell, .leaf-buy:hover { animation: none; }
+  .leaf-bracket { opacity: 1; }
+}
+
 @keyframes leaf-drift {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-14px); }
