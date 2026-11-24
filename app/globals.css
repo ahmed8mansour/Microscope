@@ -395,6 +395,20 @@
 .leaf-scope.leaf-on-backdrop { background: none; }
 @media (prefers-reduced-motion: reduce) { .tint-layer { transition: none; } }
 
+/* Hero (calm layout): smaller outlined rows at ~60% stroke opacity, a large solid row. */
+.leaf-scope .hero-line--outline {
+  -webkit-text-stroke: 2px color-mix(in srgb, var(--leaf-stroke) 60%, transparent);
+  font-size: 11.5vw;
+}
+.leaf-scope .hero-line--solid { font-size: 15vw; }
+@media (min-width: 768px) {
+  .leaf-scope .hero-line--outline { font-size: 8.2vw; }
+  .leaf-scope .hero-line--solid { font-size: 10.4vw; }
+}
+.nb-dots-faint::before { opacity: 0.28; }
+/* The hero must not form its own stacking context: its nav + buttons (z-40) sit above the fixed 3D canvas (z-30), as before. */
+.leaf-scope.leaf-no-isolate { isolation: auto; }
+
 /* Off-screen sprites stop animating (set by Creature via IntersectionObserver). */
 .leaf-drift[data-paused="true"] { animation-play-state: paused; }
 .nb-creature { z-index: -1; will-change: transform; } /* behind text, above the section background */
