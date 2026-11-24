@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { fraunces, instrumentSans, jetbrainsMono } from "./fonts";
+import { caveat, fraunces, instrumentSans, jetbrainsMono } from "./fonts";
 import { Analytics } from "@vercel/analytics/next";
 import QueryProvider from "@/components/providers/QueryProvider";
 import "./globals.css";
@@ -34,7 +34,7 @@ export default function RootLayout({
     <html
       lang="en"
       data-theme="dark"
-      className={`${fraunces.variable} ${instrumentSans.variable} ${jetbrainsMono.variable}`}
+      className={`${fraunces.variable} ${instrumentSans.variable} ${jetbrainsMono.variable} ${caveat.variable}`}
     >
       <body className="antialiased">
         <QueryProvider>
