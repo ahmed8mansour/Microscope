@@ -36,7 +36,7 @@ function Sprite({ kind }: { kind: CreatureKind }) {
         <svg viewBox="0 0 90 90" className="h-auto w-full" {...STROKE} fill="none">
           {Array.from({ length: 12 }, (_, i) => {
             const a = (i / 12) * Math.PI * 2;
-            return <circle key={i} cx={45 + Math.cos(a) * 32} cy={45 + Math.sin(a) * 32} r={8} fill="#FFD166" />;
+            return <circle key={i} cx={+(45 + Math.cos(a) * 32).toFixed(2)} cy={+(45 + Math.sin(a) * 32).toFixed(2)} r={8} fill="#FFD166" />;
           })}
           <circle cx={45} cy={45} r={29} fill="#FFD166" />
           <circle cx={38} cy={36} r={8} fill="#fff" fillOpacity={0.45} stroke="none" />
