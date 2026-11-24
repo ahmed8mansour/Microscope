@@ -217,7 +217,7 @@ export default function Instrument() {
     <>
       <section id="instrument" data-tint="water" className="leaf-scope leaf-tint-water leaf-on-backdrop relative pt-[var(--space-9)] md:pt-[var(--space-10)] pb-[var(--space-8)]">
         <Creature kind="diatom" className="right-6 top-10 w-[70px] md:right-[3%] md:top-[130px] md:w-[100px]" dur={6.5} />
-        <Creature kind="pollen" className="bottom-[7%] left-[8%] hidden w-[78px] md:block" dur={5} delay={1.5} />
+        <Creature kind="pollen" className="bottom-[7%] left-[8%] hidden w-[78px] lg:block" dur={5} delay={1.5} />
         <div ref={ref} className="relative w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
           <span className="nb-tag nb-tag--lg right-[8%] top-[18px] rotate-[4deg]">THE INSTRUMENT</span>
           <Eyebrow data-reveal className="mb-6">02 · THE INSTRUMENT</Eyebrow>
