@@ -49,7 +49,7 @@ const nodes = [
   { x: 78, y: 23, icon: "zap" as IconName, label: "USB-C charge", sub: "4 hours per charge" },
   { x: 90, y: 60, icon: "watch" as IconName, label: "Wrist strap", sub: "it will get dropped" },
   { x: 25, y: 84, icon: "lens" as IconName, label: "60–120× lens", sub: "cells, not finicky" },
-  { x: 10, y: 52, icon: "wheel" as IconName, label: "Focus wheel", sub: "ribbed for muddy fingers" },
+  { x: 18, y: 52, icon: "wheel" as IconName, label: "Focus wheel", sub: "ribbed for muddy fingers" },
 ];
 
 const specs = [
@@ -216,7 +216,7 @@ export default function Instrument() {
     <>
       <section id="instrument" className="leaf-scope leaf-tint-water relative pt-[var(--space-9)] md:pt-[var(--space-10)] pb-[var(--space-8)]">
         <div ref={ref} className="relative w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
-          <span className="nb-tag right-[8%] top-[18px] hidden rotate-[4deg] lg:inline-flex">THE INSTRUMENT</span>
+          <span className="nb-tag nb-tag--lg right-[8%] top-[18px] rotate-[4deg]">THE INSTRUMENT</span>
           <Eyebrow data-reveal className="mb-6">02 · THE INSTRUMENT</Eyebrow>
           <h2 data-reveal className="text-h2 text-ink mb-4 max-w-3xl">
             The tool you&rsquo;ve been looking through.

@@ -33,7 +33,7 @@ export default function Premise() {
       >
         <div className="absolute inset-0 rounded-full bg-[#CDEFE0]" />
         <span className="nb-tape left-1/2 -top-3 hidden -translate-x-1/2 -rotate-3 md:block" />
-        <span className="nb-tag -left-16 bottom-16 hidden rotate-[-5deg] md:inline-flex">Ages 5–12</span>
+        <span className="nb-tag -left-16 bottom-16 rotate-[-5deg]">Ages 5–12</span>
         <div className="absolute -inset-[72px] hidden rounded-full border-2 border-leaf-accent/35 md:block" />
         <div className="absolute -inset-[144px] hidden rounded-full border-2 border-leaf-accent/20 md:block" />
         <span className={`${BADGE} -left-4 top-2`} style={{ ["--dur" as string]: "6s" }}>
