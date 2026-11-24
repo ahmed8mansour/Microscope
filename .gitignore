@@ -47,4 +47,3 @@ next-env.d.ts
 /design-reference/
 
 # Claude Code local config/skills (not tracked)
-/.claude/
