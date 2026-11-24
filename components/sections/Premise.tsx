@@ -56,7 +56,7 @@ export default function Premise() {
       <div className="relative w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
         {/* Text owns the left; the 3D microscope glides into the right half
             (see ScrollProduct) — the composition and the model move together. */}
-        <div ref={ref} className="relative max-w-xl lg:max-w-2xl">
+        <div ref={ref} className="relative max-w-xl lg:max-w-[700px]">
           {/* Oversized ghost index — editorial anchor. */}
           <span
             aria-hidden
