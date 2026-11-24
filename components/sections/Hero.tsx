@@ -8,6 +8,8 @@ import Eyebrow from "@/components/ui/Eyebrow";
 import CTAButton from "@/components/ui/CTAButton";
 import Marquee from "@/components/ui/Marquee";
 import Creature from "@/components/ui/Creature";
+import HeroLens from "@/components/hero-lens/HeroLens";
+import { ENABLE_HERO_LENS } from "@/components/hero-lens/config";
 
 export default function Hero() {
   const rootRef = useRef<HTMLElement>(null);
@@ -89,6 +91,8 @@ export default function Hero() {
           <Marquee text="A TINY WORLD" dur={50} dir="right" className="hero-line hero-line--outline" />
         </div>
       </div>
+
+      {ENABLE_HERO_LENS && <HeroLens />}
 
       {/* Action layer — above the product. */}
       <div className="absolute inset-x-0 bottom-[8vh] z-40 flex flex-col items-center gap-8 px-6 text-center">

@@ -4,6 +4,7 @@ import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import ScrollProduct from "./ScrollProduct";
 import { useScrollStore } from "@/lib/store";
+import { ENABLE_HERO_LENS } from "@/components/hero-lens/config";
 
 // On-demand render driver. With frameloop="demand" the scene only renders when
 // invalidate() is called — so we invalidate while the page is actively
@@ -118,7 +119,7 @@ export default function ProductScene() {
       <Canvas
         frameloop="demand"
         camera={{ position: [0, 0, 5], fov: 45 }}
-        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+        gl={{ antialias: true, alpha: true, powerPreference: "high-performance", preserveDrawingBuffer: ENABLE_HERO_LENS }}
         dpr={[1, 1.5]}
         onCreated={onCreated}
         style={{
