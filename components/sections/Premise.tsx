@@ -2,6 +2,7 @@
 
 import Eyebrow from "@/components/ui/Eyebrow";
 import { useReveal } from "@/lib/useReveal";
+import { HandCircle } from "@/components/ui/NotebookDecor";
 
 const BADGE =
   "leaf-drift absolute flex h-14 w-14 md:h-16 md:w-16 items-center justify-center rounded-full border border-[color:var(--leaf-card-border)] bg-[color:var(--leaf-chip)] text-leaf-accent shadow-[var(--leaf-card-shadow)]";
@@ -31,6 +32,8 @@ export default function Premise() {
         className="pointer-events-none absolute left-1/2 top-[24vh] h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 md:left-[78%] md:top-1/2 md:h-[400px] md:w-[400px]"
       >
         <div className="absolute inset-0 rounded-full bg-[#CDEFE0]" />
+        <span className="nb-tape left-1/2 -top-3 hidden -translate-x-1/2 -rotate-3 md:block" />
+        <span className="nb-tag -left-16 bottom-16 hidden rotate-[-5deg] md:inline-flex">Ages 5–12</span>
         <div className="absolute -inset-[72px] hidden rounded-full border-2 border-leaf-accent/35 md:block" />
         <div className="absolute -inset-[144px] hidden rounded-full border-2 border-leaf-accent/20 md:block" />
         <span className={`${BADGE} -left-4 top-2`} style={{ ["--dur" as string]: "6s" }}>
@@ -72,7 +75,12 @@ export default function Premise() {
             </Eyebrow>
 
             <h2 data-reveal className="text-h1 text-ink mb-8 leading-[0.98]">
-              Your kid can name forty logos and zero leaves.
+              Your kid can{" "}
+              <span className="relative inline-block">
+                name
+                <HandCircle className="-inset-x-3 -inset-y-2 h-[calc(100%+16px)] w-[calc(100%+24px)]" />
+              </span>{" "}
+              forty logos and zero leaves.
             </h2>
 
             <p data-reveal className="font-body text-base md:text-lg text-leaf-muted leading-relaxed max-w-md">
@@ -80,6 +88,7 @@ export default function Premise() {
               world are simply too small to notice. A microscope isn&rsquo;t a
               science tool &mdash; it&rsquo;s permission to look closer.
             </p>
+            <p aria-hidden className="nb-hand mt-6 hidden -rotate-[5deg] text-[34px] lg:block">Look closer</p>
           </div>
         </div>
       </div>

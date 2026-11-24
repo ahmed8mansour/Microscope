@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import gsap from "gsap";
 import Eyebrow from "@/components/ui/Eyebrow";
 import { useReveal } from "@/lib/useReveal";
+import { HandArrow, HandCircle } from "@/components/ui/NotebookDecor";
 
 const InstrumentViewer = dynamic(
   () => import("@/components/scene/InstrumentViewer"),
@@ -167,6 +168,9 @@ function InstrumentWeb() {
 
       {/* Desktop: the animated web overlay */}
       <div className="absolute inset-0 hidden lg:block pointer-events-none">
+        {/* hand-drawn circle round the first callout dot */}
+        <HandCircle className="h-11 w-16" style={{ left: `${nodes[0].x}%`, top: `${nodes[0].y}%`, transform: "translate(-50%, -50%)" }} />
+
         {/* hub over the model centre */}
         <span
           className="web-hub absolute w-3 h-3 -translate-x-1/2 -translate-y-1/2 rounded-full"
@@ -211,7 +215,8 @@ export default function Instrument() {
   return (
     <>
       <section id="instrument" className="leaf-scope leaf-tint-water relative pt-[var(--space-9)] md:pt-[var(--space-10)] pb-[var(--space-8)]">
-        <div ref={ref} className="w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
+        <div ref={ref} className="relative w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
+          <span className="nb-tag right-[8%] top-[18px] hidden rotate-[4deg] lg:inline-flex">THE INSTRUMENT</span>
           <Eyebrow data-reveal className="mb-6">02 · THE INSTRUMENT</Eyebrow>
           <h2 data-reveal className="text-h2 text-ink mb-4 max-w-3xl">
             The tool you&rsquo;ve been looking through.
@@ -239,7 +244,9 @@ export default function Instrument() {
 
       {/* Spec sheet — three cards on the mint tint */}
       <section id="specs" className="leaf-scope leaf-tint-mint relative py-[var(--space-8)] md:py-[var(--space-9)]">
-        <div ref={specsRef} className="w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
+        <div ref={specsRef} className="relative w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
+          <p aria-hidden className="nb-hand absolute -top-12 right-[6%] hidden -rotate-[6deg] text-[38px] lg:block">It will get dropped</p>
+          <HandArrow className="absolute -top-8 right-[calc(6%+190px)] hidden lg:block" />
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8">
             {specs.map((col) => (
               <div
