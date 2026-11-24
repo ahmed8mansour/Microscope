@@ -56,6 +56,56 @@
   --glow-accent: 0 0 24px -4px rgba(203, 166, 247, 0.5);
 }
 
+/* --- "Leaf Lab" redesign tokens (light mint) ------------------------------
+   Additive and namespaced `--leaf-*` so they don't collide with the existing
+   --ink / --paper-bone tokens. Nothing consumes them yet; sections adopt them
+   one at a time. Source: design-reference/DESIGN-HANDOFF.md. */
+:root {
+  --leaf-bg: #EAF8F1;        /* default page background (mint) */
+  --leaf-ink: #0C3B33;       /* headlines + body text */
+  --leaf-muted: #35645A;     /* secondary text */
+  --leaf-accent: #0B7A6C;    /* buttons, eyebrow labels, scale-bar marker */
+  --leaf-btn-ink: #FFFFFF;   /* text on accent buttons */
+  --leaf-chip: #D3F1E5;      /* icon chips */
+  --leaf-stroke: #62C6AD;    /* outlined hero text */
+  --leaf-card: #FFFFFF;
+  --leaf-card-border: rgba(12, 59, 51, 0.13);
+  --leaf-card-radius: 34px;
+  --leaf-card-shadow: 0 22px 50px -26px rgba(12, 90, 70, 0.45);
+  --leaf-warm: #FF7A3D;      /* orange accent / small highlights */
+  --leaf-note: #E8590C;      /* handwritten notes */
+  --leaf-pollen: #FFD166;    /* creature + hidden-world colours */
+  --leaf-sky: #5EB6FF;
+  --leaf-pink: #FF8FB3;
+  --leaf-lime: #B6E34A;
+
+  /* Section tints: base colour + soft radial glow(s). */
+  --leaf-tint-mint: #EAF8F1;     /* hero, specs, checkout, leaf overlay */
+  --leaf-glow-mint-a: #C6F1DA;   /* top-right */
+  --leaf-glow-mint-b: #FFE8C6;   /* bottom-left */
+  --leaf-tint-pollen: #FFF9E7;   /* premise, reviews */
+  --leaf-glow-pollen: #FFEFB4;
+  --leaf-tint-water: #EAF6FF;    /* instrument */
+  --leaf-glow-water: #D4ECFF;
+  --leaf-tint-lime: #F0FAE6;     /* buy */
+  --leaf-glow-lime: #E2F6B8;
+}
+
+@theme inline {
+  --color-leaf-bg: var(--leaf-bg);
+  --color-leaf-ink: var(--leaf-ink);
+  --color-leaf-muted: var(--leaf-muted);
+  --color-leaf-accent: var(--leaf-accent);
+  --color-leaf-chip: var(--leaf-chip);
+  --color-leaf-stroke: var(--leaf-stroke);
+  --color-leaf-warm: var(--leaf-warm);
+  --color-leaf-note: var(--leaf-note);
+  --color-leaf-pollen: var(--leaf-pollen);
+  --color-leaf-sky: var(--leaf-sky);
+  --color-leaf-pink: var(--leaf-pink);
+  --color-leaf-lime: var(--leaf-lime);
+}
+
 @theme inline {
   --color-paper-bone: var(--paper-bone);
   --color-ink: var(--ink);
