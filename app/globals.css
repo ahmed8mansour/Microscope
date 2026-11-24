@@ -208,6 +208,10 @@
     radial-gradient(820px 620px at 4% 100%, #CDF2DF 0%, transparent 60%);
 }
 
+/* Cursor flashlight over light sections: warm soft spotlight, no dark vignette. */
+.cursor-spot[data-light="true"] { mix-blend-mode: multiply; }
+.cursor-vignette[data-light="true"] { opacity: 0; }
+
 @keyframes leaf-drift {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-14px); }
