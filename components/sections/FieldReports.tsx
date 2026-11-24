@@ -107,7 +107,7 @@ export default function FieldReports() {
                   {/* polaroid: the site's leaf photo, cropped differently per card */}
                   <div
                     aria-hidden
-                    className="absolute -bottom-6 -right-3 h-[120px] w-[108px] bg-white p-[7px] pb-[26px] shadow-[0_10px_22px_-10px_rgba(12,59,51,0.55)] md:-right-5"
+                    className="absolute -bottom-6 -right-1 h-[120px] w-[108px] bg-white p-[7px] pb-[26px] shadow-[0_10px_22px_-10px_rgba(12,59,51,0.55)] md:-right-5"
                     style={{ rotate: look.photoTilt }}
                   >
                     <div
