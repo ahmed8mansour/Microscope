@@ -32,6 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
+      suppressHydrationWarning
       lang="en"
       data-theme="dark"
       className={`${fraunces.variable} ${instrumentSans.variable} ${jetbrainsMono.variable} ${caveat.variable}`}
