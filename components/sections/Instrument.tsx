@@ -122,11 +122,8 @@ function InstrumentWeb() {
         <div className="absolute left-1/2 top-1/2 hidden md:block h-[690px] w-[690px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-leaf-accent/15" />
       </div>
 
-      <div className="web-model absolute inset-0">
-        <InstrumentViewer />
-      </div>
-
-      {/* Desktop: the animated web overlay */}
+      {/* Spokes + ring threads sit BEHIND the (transparent) model canvas so the
+          lines no longer cross the microscope. */}
       <div className="absolute inset-0 hidden lg:block pointer-events-none">
         <svg className="absolute inset-0 w-full h-full overflow-visible">
           {/* outer ring threads (node → next node) */}
@@ -162,7 +159,14 @@ function InstrumentWeb() {
             />
           ))}
         </svg>
+      </div>
 
+      <div className="web-model absolute inset-0">
+        <InstrumentViewer />
+      </div>
+
+      {/* Desktop: the animated web overlay */}
+      <div className="absolute inset-0 hidden lg:block pointer-events-none">
         {/* hub over the model centre */}
         <span
           className="web-hub absolute w-3 h-3 -translate-x-1/2 -translate-y-1/2 rounded-full"
