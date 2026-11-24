@@ -46,11 +46,11 @@ export default function ContactForm({ onSubmit, submitting, serverError }: Conta
   return (
     <form onSubmit={handleSubmit(onValid)} className="space-y-4 text-left">
       <div>
-        <label htmlFor="email" className="block font-body text-sm text-ink/70 mb-1">
+        <label htmlFor="email" className="co-label">
           Email
         </label>
         <div className="relative">
-          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-leaf-accent">
+          <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-leaf-accent">
             <svg {...FIELD_ICON}>
               <rect width="20" height="16" x="2" y="4" rx="2" />
               <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
@@ -61,18 +61,18 @@ export default function ContactForm({ onSubmit, submitting, serverError }: Conta
             type="email"
             autoComplete="email"
             {...register("email")}
-            className="w-full border border-ink/20 rounded-[4px] pl-10 pr-3 py-2 font-body text-ink bg-paper-bone focus:outline-none focus:border-cinnabar"
+            className="co-field co-field--icon font-body"
           />
         </div>
         {errors.email && <p className="text-sm text-danger mt-1">{errors.email.message}</p>}
       </div>
 
       <div>
-        <label htmlFor="whatsapp" className="block font-body text-sm text-ink/70 mb-1">
+        <label htmlFor="whatsapp" className="co-label">
           WhatsApp number
         </label>
         <div className="relative">
-          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-leaf-accent">
+          <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-leaf-accent">
             <svg {...FIELD_ICON}>
               <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
             </svg>
@@ -82,7 +82,7 @@ export default function ContactForm({ onSubmit, submitting, serverError }: Conta
             type="tel"
             autoComplete="tel"
             {...register("whatsapp")}
-            className="w-full border border-ink/20 rounded-[4px] pl-10 pr-3 py-2 font-body text-ink bg-paper-bone focus:outline-none focus:border-cinnabar"
+            className="co-field co-field--icon font-body"
           />
         </div>
         {errors.whatsapp && (
@@ -95,7 +95,7 @@ export default function ContactForm({ onSubmit, submitting, serverError }: Conta
       <button
         type="submit"
         disabled={submitting}
-        className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-cinnabar text-paper-bone font-body font-medium rounded-[4px] transition-opacity hover:opacity-90 disabled:opacity-50 cursor-pointer"
+        className="co-btn font-body"
       >
         <svg {...FIELD_ICON} width={18} height={18}>
           <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />

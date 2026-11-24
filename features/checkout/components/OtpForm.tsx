@@ -47,7 +47,7 @@ export default function OtpForm({
   return (
     <form onSubmit={handleSubmit(onValid)} className="space-y-4 text-left">
       {notice && (
-        <p className="font-body text-sm text-ink bg-wattle/20 border border-wattle rounded-[4px] px-3 py-2">
+        <p className="co-banner font-body text-sm">
           {notice}
         </p>
       )}
@@ -57,7 +57,7 @@ export default function OtpForm({
       </p>
 
       <div>
-        <label htmlFor="code" className="block font-body text-sm text-ink/70 mb-1">
+        <label htmlFor="code" className="co-label">
           Verification code
         </label>
         <input
@@ -66,7 +66,7 @@ export default function OtpForm({
           autoComplete="one-time-code"
           maxLength={6}
           {...register("code")}
-          className="w-full border border-ink/20 rounded-[4px] px-3 py-2 font-utility text-ink text-lg tracking-widest bg-paper-bone focus:outline-none focus:border-cinnabar"
+          className="co-field font-utility text-lg tracking-widest"
         />
         {errors.code && <p className="text-sm text-danger mt-1">{errors.code.message}</p>}
       </div>
@@ -76,7 +76,7 @@ export default function OtpForm({
       <button
         type="submit"
         disabled={submitting}
-        className="w-full inline-flex items-center justify-center px-6 py-3 bg-cinnabar text-paper-bone font-body font-medium rounded-[4px] transition-opacity hover:opacity-90 disabled:opacity-50 cursor-pointer"
+        className="co-btn font-body"
       >
         {submitting ? "Verifying…" : "Verify code"}
       </button>
@@ -85,7 +85,7 @@ export default function OtpForm({
         type="button"
         onClick={onResend}
         disabled={resending}
-        className="w-full font-body text-sm text-ink/60 underline decoration-wattle decoration-2 underline-offset-4 hover:opacity-70 disabled:opacity-50 cursor-pointer"
+        className="co-link w-full font-body text-sm hover:opacity-70 disabled:opacity-50 cursor-pointer"
       >
         {resending ? "Resending…" : "Resend code"}
       </button>

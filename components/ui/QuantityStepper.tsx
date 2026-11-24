@@ -32,7 +32,7 @@ export default function QuantityStepper({ value, onChange, disabled = false }: Q
         onClick={dec}
         disabled={disabled || atMin}
         aria-label="Decrease quantity"
-        className="h-9 w-9 inline-flex items-center justify-center rounded-[4px] border border-ink/20 text-ink text-lg leading-none transition-opacity hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+        className="co-step"
       >
         &minus;
       </button>
@@ -48,7 +48,7 @@ export default function QuantityStepper({ value, onChange, disabled = false }: Q
         onClick={inc}
         disabled={disabled}
         aria-label="Increase quantity"
-        className="h-9 w-9 inline-flex items-center justify-center rounded-[4px] border border-ink/20 text-ink text-lg leading-none transition-opacity hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+        className="co-step"
       >
         +
       </button>

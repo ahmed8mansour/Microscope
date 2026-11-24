@@ -7,6 +7,8 @@ import OtpForm from "@/features/checkout/components/OtpForm";
 import { useSendOtp, useVerifyOtp } from "@/features/checkout/hooks/use-checkout";
 import { useConfirm } from "@/features/payment/hooks/use-confirm";
 import type { ContactInput } from "@/features/checkout/schemas/checkout.schema";
+import CheckoutHeader from "@/features/checkout/components/CheckoutHeader";
+import CheckoutShowcase from "@/features/checkout/components/CheckoutShowcase";
 import PayStep from "@/features/payment/components/PayStep";
 import { formatPrice } from "@/lib/config/product";
 import { getWhatsAppSupportUrl } from "@/lib/config/support";
@@ -100,11 +102,21 @@ function CheckoutFlow() {
   }
 
   return (
-    <main className="leaf-scope leaf-tint-mint min-h-dvh flex items-center justify-center px-6 py-16">
-      <div className="max-w-md w-full text-center">
-        <h1 className="text-h2 text-ink mb-2">Checkout</h1>
+    <main className="leaf-scope leaf-tint-mint relative min-h-dvh flex items-center justify-center px-6 pb-16 pt-28">
+      <CheckoutHeader />
+      {/* Contact step on large screens: two columns (form left, microscope
+          showcase right). Every other step: one centred column. */}
+      <div
+        className={
+          step === "contact"
+            ? "w-full max-w-md lg:max-w-[1180px] lg:grid lg:grid-cols-[560px_minmax(0,1fr)] lg:items-center lg:gap-20"
+            : "w-full max-w-md"
+        }
+      >
+      <div className="w-full text-center lg:max-w-[560px]">
+        <h1 className={`text-h2 text-ink mb-2 ${step === "contact" ? "lg:mb-4 lg:text-left lg:!text-[clamp(64px,6.4vw,92px)] lg:!leading-none" : ""}`}>Checkout</h1>
         {/* Product summary card — the same line as before, in a card. */}
-        <div className="mx-auto mb-8 inline-flex items-center gap-3 rounded-full border border-[color:var(--leaf-card-border)] bg-white px-4 py-2 shadow-[var(--leaf-card-shadow)]">
+        <div className={`mx-auto mb-8 inline-flex ${step === "contact" ? "lg:hidden" : ""} items-center gap-3 rounded-full border border-[color:var(--leaf-card-border)] bg-white px-4 py-2 shadow-[var(--leaf-card-shadow)]`}>
           <span className="inline-flex h-9 w-9 flex-none items-center justify-center rounded-full bg-leaf-chip text-leaf-accent">
             <svg viewBox="0 0 24 24" width={18} height={18} fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <path d="m7.5 4.27 9 5.15" />
@@ -115,6 +127,11 @@ function CheckoutFlow() {
           </span>
           <p className="font-body text-ink/80">The Field Microscope &mdash; {formatPrice()}</p>
         </div>
+        {step === "contact" && (
+          <p className="mb-10 hidden text-left font-body text-[21px] text-leaf-muted lg:block">
+            The Field Microscope &mdash; {formatPrice()}
+          </p>
+        )}
 
         {step === "contact" && (
           <ContactForm
@@ -147,6 +164,8 @@ function CheckoutFlow() {
 
         {step === "confirm" && <ConfirmView confirm={confirm} quantity={quantity} />}
       </div>
+      {step === "contact" && <CheckoutShowcase />}
+      </div>
     </main>
   );
 }
@@ -164,7 +183,7 @@ function ConfirmView({
 
   if (confirm.isError) {
     return (
-      <div className="space-y-4">
+      <div className="co-card space-y-4">
         <p className="font-body text-ink">We couldn&rsquo;t confirm this payment.</p>
         <p className="text-sm text-danger">{confirm.error.message}</p>
         <SupportButton />
@@ -176,7 +195,12 @@ function ConfirmView({
 
   if (data.status === "success") {
     return (
-      <div className="space-y-2">
+      <div className="co-card space-y-2">
+        <span className="mx-auto mb-2 flex h-14 w-14 items-center justify-center rounded-full bg-leaf-chip text-leaf-accent" aria-hidden>
+          <svg viewBox="0 0 24 24" width={28} height={28} fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20 6 9 17l-5-5" />
+          </svg>
+        </span>
         <h2 className="text-h3 text-ink">Thank you!</h2>
         <p className="font-body text-ink/70">Your payment was successful.</p>
         <div className="mt-4 space-y-1 text-sm text-ink/70">
@@ -195,7 +219,7 @@ function ConfirmView({
 
   if (data.status === "pending") {
     return (
-      <div className="space-y-3">
+      <div className="co-card space-y-3">
         <h2 className="text-h3 text-ink">Payment processing</h2>
         <p className="font-body text-ink/70">
           We&rsquo;re still confirming your payment. We&rsquo;ll email you as soon as it&rsquo;s done.
@@ -207,7 +231,7 @@ function ConfirmView({
 
   if (data.status === "refunded") {
     return (
-      <div className="space-y-3">
+      <div className="co-card space-y-3">
         <h2 className="text-h3 text-ink">Order refunded</h2>
         <p className="font-body text-ink/70">This order has been refunded.</p>
         <SupportButton />
@@ -217,7 +241,7 @@ function ConfirmView({
 
   if (data.status === "failed") {
     return (
-      <div className="space-y-3">
+      <div className="co-card space-y-3">
         <h2 className="text-h3 text-ink">Payment not completed</h2>
         <p className="font-body text-ink/70">
           This payment didn&rsquo;t go through. Please start checkout again to try another card.
@@ -229,7 +253,7 @@ function ConfirmView({
 
   // not_found
   return (
-    <div className="space-y-3">
+    <div className="co-card space-y-3">
       <h2 className="text-h3 text-ink">We couldn&rsquo;t find this order</h2>
       <p className="font-body text-ink/70">
         If you believe this is a mistake, contact support.
@@ -245,7 +269,7 @@ function SupportButton() {
       href={getWhatsAppSupportUrl()}
       target="_blank"
       rel="noopener noreferrer"
-      className="mt-6 inline-flex items-center justify-center px-6 py-3 bg-cinnabar text-paper-bone font-body font-medium rounded-[4px] transition-opacity hover:opacity-90"
+      className="co-btn co-btn--auto mt-6 font-body"
     >
       Contact support on WhatsApp
     </a>
