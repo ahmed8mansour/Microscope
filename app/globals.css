@@ -65,6 +65,7 @@
   --leaf-ink: #0C3B33;       /* headlines + body text */
   --leaf-muted: #35645A;     /* secondary text */
   --leaf-accent: #0B7A6C;    /* buttons, eyebrow labels, scale-bar marker */
+  --leaf-accent-ink: #09695C; /* small accent TEXT on the light tints (>= 4.5:1) */
   --leaf-btn-ink: #FFFFFF;   /* text on accent buttons */
   --leaf-chip: #D3F1E5;      /* icon chips */
   --leaf-stroke: #62C6AD;    /* outlined hero text */
@@ -96,6 +97,7 @@
   --color-leaf-ink: var(--leaf-ink);
   --color-leaf-muted: var(--leaf-muted);
   --color-leaf-accent: var(--leaf-accent);
+  --color-leaf-accent-ink: var(--leaf-accent-ink);
   --color-leaf-chip: var(--leaf-chip);
   --color-leaf-stroke: var(--leaf-stroke);
   --color-leaf-warm: var(--leaf-warm);
@@ -196,7 +198,7 @@
   --paper-bone: var(--leaf-bg);
   --ink: var(--leaf-ink);
   --wattle: var(--leaf-accent);
-  --wattle-ink: var(--leaf-accent);
+  --wattle-ink: var(--leaf-accent-ink);
   --cinnabar: var(--leaf-accent);
   --accent-ink: var(--leaf-btn-ink);
   color: var(--leaf-ink);
