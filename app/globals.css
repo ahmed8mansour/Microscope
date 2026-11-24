@@ -356,6 +356,9 @@
   50% { transform: translateY(-14px); }
 }
 .leaf-drift { animation: leaf-drift var(--dur, 6s) ease-in-out infinite; animation-delay: var(--del, 0s); }
+/* Off-screen sprites stop animating (set by Creature via IntersectionObserver). */
+.leaf-drift[data-paused="true"] { animation-play-state: paused; }
+.nb-creature { z-index: -1; will-change: transform; } /* behind text, above the section background */
 @media (prefers-reduced-motion: reduce) {
   .leaf-drift { animation: none; }
 }

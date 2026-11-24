@@ -6,6 +6,7 @@ import gsap from "gsap";
 import Eyebrow from "@/components/ui/Eyebrow";
 import { useReveal } from "@/lib/useReveal";
 import { HandArrow, HandCircle } from "@/components/ui/NotebookDecor";
+import Creature from "@/components/ui/Creature";
 
 const InstrumentViewer = dynamic(
   () => import("@/components/scene/InstrumentViewer"),
@@ -215,6 +216,8 @@ export default function Instrument() {
   return (
     <>
       <section id="instrument" className="leaf-scope leaf-tint-water relative pt-[var(--space-9)] md:pt-[var(--space-10)] pb-[var(--space-8)]">
+        <Creature kind="diatom" className="right-6 top-10 w-[70px] md:right-[3%] md:top-[130px] md:w-[100px]" dur={6.5} />
+        <Creature kind="pollen" className="bottom-[7%] left-[8%] hidden w-[78px] md:block" dur={5} delay={1.5} />
         <div ref={ref} className="relative w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
           <span className="nb-tag nb-tag--lg right-[8%] top-[18px] rotate-[4deg]">THE INSTRUMENT</span>
           <Eyebrow data-reveal className="mb-6">02 · THE INSTRUMENT</Eyebrow>
@@ -244,6 +247,8 @@ export default function Instrument() {
 
       {/* Spec sheet — three cards on the mint tint */}
       <section id="specs" className="leaf-scope leaf-tint-mint relative py-[var(--space-8)] md:py-[var(--space-9)]">
+        <Creature kind="cell" className="bottom-[10%] left-[9%] hidden w-[70px] md:block" dur={6} />
+        <Creature kind="diatom" className="bottom-[10%] right-[3%] hidden w-[100px] md:block" dur={7.5} delay={2} />
         <div ref={specsRef} className="relative w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
           <p aria-hidden className="nb-hand absolute -top-12 right-[6%] hidden -rotate-[6deg] text-[38px] lg:block">It will get dropped</p>
           <HandArrow className="absolute -top-6 right-[calc(6%+345px)] hidden lg:block" />

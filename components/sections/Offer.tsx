@@ -4,6 +4,7 @@ import Eyebrow from "@/components/ui/Eyebrow";
 import CTAButton from "@/components/ui/CTAButton";
 import { useReveal } from "@/lib/useReveal";
 import { formatPrice, formatPriceShort } from "@/lib/config/product";
+import Creature from "@/components/ui/Creature";
 
 // Preview burst: small cell shapes drifting out from behind the button on a
 // loop. Colours come from the Leaf Lab tokens; each cell has its own travel
@@ -70,6 +71,8 @@ export default function Offer() {
       id="offer"
       className="leaf-scope leaf-tint-lime relative overflow-hidden py-[var(--space-9)] md:py-[var(--space-10)]"
     >
+      <Creature kind="diatom" className="right-6 top-10 w-[64px] md:right-[8%] md:top-[16%] md:w-[100px]" dur={6.5} />
+      <Creature kind="waterbear" className="bottom-[14%] left-[9%] hidden w-[96px] md:block" dur={7} delay={2} />
       <div ref={ref} className="w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-16 text-center">
         <Eyebrow data-reveal className="mb-6">03 &middot; TAKE ONE HOME</Eyebrow>
 

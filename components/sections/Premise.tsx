@@ -3,6 +3,7 @@
 import Eyebrow from "@/components/ui/Eyebrow";
 import { useReveal } from "@/lib/useReveal";
 import { HandCircle } from "@/components/ui/NotebookDecor";
+import Creature from "@/components/ui/Creature";
 
 const BADGE =
   "leaf-drift absolute flex h-14 w-14 md:h-16 md:w-16 items-center justify-center rounded-full border border-[color:var(--leaf-card-border)] bg-[color:var(--leaf-chip)] text-leaf-accent shadow-[var(--leaf-card-shadow)]";
@@ -25,6 +26,9 @@ export default function Premise() {
       id="premise"
       className="leaf-scope leaf-tint-pollen relative min-h-dvh flex items-start md:items-center overflow-hidden pt-[44vh] md:pt-0"
     >
+      <Creature kind="waterbear" className="right-[2%] top-[5%] hidden w-[100px] md:block" dur={7} />
+      <Creature kind="pollen" className="bottom-[3%] left-[50%] hidden w-[70px] md:block" dur={5.5} delay={2} />
+
       {/* Pastel disc + rings behind the 3D microscope (which glides into the
           right half — see ScrollProduct) with three floating icon badges. */}
       <div
