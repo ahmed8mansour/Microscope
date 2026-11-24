@@ -30,7 +30,7 @@ export default function NotebookOverlay() {
     const value = valueRef.current;
     if (!root || !marker || !value) return;
 
-    const sections = Array.from(document.querySelectorAll<HTMLElement>("main section[id]"));
+    const observed = new Set<HTMLElement>();
     let active: HTMLElement | null = null;
     let frame = 0;
 
@@ -60,13 +60,27 @@ export default function NotebookOverlay() {
       },
       { rootMargin: "-50% 0px -50% 0px" }
     );
-    sections.forEach((s) => io.observe(s));
+    // Some sections (the 3D leaf journey) mount after hydration, so pick up any
+    // new <section id> inside <main> as it appears.
+    const scan = () => {
+      document.querySelectorAll<HTMLElement>("main section[id]").forEach((s) => {
+        if (!observed.has(s)) {
+          observed.add(s);
+          io.observe(s);
+        }
+      });
+    };
+    scan();
+    const main = document.querySelector("main");
+    const mo = new MutationObserver(scan);
+    if (main) mo.observe(main, { childList: true });
 
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule, { passive: true });
     schedule();
     return () => {
       io.disconnect();
+      mo.disconnect();
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
       if (frame) cancelAnimationFrame(frame);
@@ -82,10 +96,10 @@ export default function NotebookOverlay() {
       className="nb-overlay pointer-events-none fixed inset-0 z-[39]"
     >
       {/* crop marks */}
-      <span className="nb-crop left-[30px] top-[30px] border-r-0 border-b-0" />
-      <span className="nb-crop right-[30px] top-[30px] border-l-0 border-b-0" />
-      <span className="nb-crop bottom-[30px] left-[30px] border-r-0 border-t-0" />
-      <span className="nb-crop bottom-[30px] right-[30px] border-l-0 border-t-0" />
+      <span className="nb-crop nb-crop--tl" />
+      <span className="nb-crop nb-crop--tr" />
+      <span className="nb-crop nb-crop--bl" />
+      <span className="nb-crop nb-crop--br" />
 
       {/* magnification ruler (wide screens only) */}
       <div className="nb-ruler absolute left-8 top-[18vh] hidden h-[56vh] min-[1400px]:block">

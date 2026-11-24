@@ -297,6 +297,11 @@
   opacity: 0.35;
   transition: opacity 0.3s;
 }
+/* Two edges per corner (plain CSS: unlayered rules would beat Tailwind's border-*-0). */
+.nb-crop--tl { left: 30px; top: 30px; border-right: 0; border-bottom: 0; }
+.nb-crop--tr { right: 30px; top: 30px; border-left: 0; border-bottom: 0; }
+.nb-crop--bl { left: 30px; bottom: 30px; border-right: 0; border-top: 0; }
+.nb-crop--br { right: 30px; bottom: 30px; border-left: 0; border-top: 0; }
 @media (min-width: 768px) { .nb-crop { display: block; } }
 .nb-marker { transition: transform 0.18s linear; }
 /* Hero keeps a simplified ruler: only the 1× and 200× ends. */
