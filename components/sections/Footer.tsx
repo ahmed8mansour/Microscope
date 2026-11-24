@@ -3,7 +3,7 @@ import { getWhatsAppSupportUrl } from "@/lib/config/support";
 
 export default function Footer() {
   return (
-    <footer className="bg-paper-bone border-t border-ink/15 py-8">
+    <footer className="relative bg-paper-bone border-t border-ink/15 py-8">
       <div className="w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-16 flex flex-col sm:flex-row items-center justify-between gap-4">
         <p className="text-caption text-ink/40">
           &copy; 2026 &middot; Field Notes &middot; Made in Melbourne
