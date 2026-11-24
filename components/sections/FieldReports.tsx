@@ -55,7 +55,7 @@ export default function FieldReports() {
       <Creature kind="pollen" className="left-[5%] top-[6%] hidden w-[84px] md:block" dur={6} />
       <Creature kind="waterbear" className="bottom-[5%] right-[2%] hidden w-[100px] md:block" dur={7} delay={3} />
       <div className="w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
-        <div ref={ref} className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-10">
+        <div ref={ref} className="mx-auto grid max-w-[520px] grid-cols-1 gap-12 lg:max-w-none lg:grid-cols-3 lg:gap-10">
           {testimonials.map((t, i) => {
             const look = looks[i % looks.length];
             return (
