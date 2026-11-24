@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import SmoothScrollProvider from "@/components/ui/SmoothScrollProvider";
 import CursorLens from "@/components/ui/CursorLens";
 import FocusHUD from "@/components/ui/FocusHUD";
+import NotebookOverlay from "@/components/ui/NotebookOverlay";
 import Hero from "@/components/sections/Hero";
 import Premise from "@/components/sections/Premise";
 import Instrument from "@/components/sections/Instrument";
@@ -33,6 +34,7 @@ export default function Home() {
     <SmoothScrollProvider>
       <CursorLens />
       <FocusHUD />
+      <NotebookOverlay />
       <ProductScene />
       <main data-theme="dark" className="relative bg-paper-bone">
         <Hero />

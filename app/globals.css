@@ -267,6 +267,83 @@
   .leaf-bracket { opacity: 1; }
 }
 
+/* ============================================================
+   Field-notebook look (Part A): dotted paper, crop marks, ruler, tags, tape,
+   handwritten notes. Decorative only — pointer-events none, behind text.
+   ============================================================ */
+.leaf-scope {
+  position: relative;
+  isolation: isolate;
+}
+.leaf-scope::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(12, 59, 51, 0.2) 1.4px, transparent 1.5px);
+  background-size: 30px 30px;
+  opacity: 0.4;
+}
+
+.nb-overlay[data-tone="light"] { --nb-ink: var(--leaf-ink); }
+.nb-overlay[data-tone="dark"] { --nb-ink: #F5F2FA; }
+.nb-crop {
+  position: absolute;
+  display: none;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--nb-ink);
+  opacity: 0.35;
+  transition: opacity 0.3s;
+}
+@media (min-width: 768px) { .nb-crop { display: block; } }
+.nb-marker { transition: transform 0.18s linear; }
+/* Hero keeps a simplified ruler: only the 1× and 200× ends. */
+.nb-overlay[data-simple="true"] .nb-tick[data-minor="true"],
+.nb-overlay[data-simple="true"] .nb-label[data-mid="true"] { display: none; }
+@media (prefers-reduced-motion: reduce) { .nb-marker { transition: none; } }
+
+.nb-hand {
+  font-family: var(--font-caveat), "Caveat", "Comic Sans MS", cursive;
+  color: var(--leaf-note);
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.nb-tag {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  background: #FFF6DA;
+  border: 1px solid rgba(12, 59, 51, 0.22);
+  box-shadow: 0 6px 14px -8px rgba(12, 59, 51, 0.5);
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--leaf-ink);
+  pointer-events: none;
+}
+.nb-tag::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1.5px solid var(--leaf-ink);
+}
+.nb-tape {
+  position: absolute;
+  width: 112px;
+  height: 30px;
+  background: rgba(255, 209, 102, 0.85);
+  box-shadow: 0 2px 4px rgba(12, 59, 51, 0.12);
+  pointer-events: none;
+}
+
 @keyframes leaf-drift {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-14px); }
