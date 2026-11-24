@@ -246,7 +246,7 @@ export default function Instrument() {
       <section id="specs" className="leaf-scope leaf-tint-mint relative py-[var(--space-8)] md:py-[var(--space-9)]">
         <div ref={specsRef} className="relative w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
           <p aria-hidden className="nb-hand absolute -top-12 right-[6%] hidden -rotate-[6deg] text-[38px] lg:block">It will get dropped</p>
-          <HandArrow className="absolute -top-8 right-[calc(6%+190px)] hidden lg:block" />
+          <HandArrow className="absolute -top-6 right-[calc(6%+345px)] hidden lg:block" />
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8">
             {specs.map((col) => (
               <div
