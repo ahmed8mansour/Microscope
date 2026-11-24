@@ -144,7 +144,7 @@ export default function StreetAutocomplete({
         <ul
           id={`${id}-listbox`}
           role="listbox"
-          className="absolute z-20 mt-1 w-full max-h-64 overflow-auto rounded-[4px] border border-ink/20 bg-paper-bone shadow-lg"
+          className="absolute z-20 mt-1 w-full max-h-64 overflow-auto rounded-2xl border border-[color:var(--leaf-card-border)] bg-white shadow-[var(--leaf-card-shadow)]"
         >
           {suggestions.map((s, i) => (
             <li
@@ -157,7 +157,7 @@ export default function StreetAutocomplete({
               }}
               onMouseEnter={() => setActive(i)}
               className={`cursor-pointer px-3 py-2 text-left ${
-                i === active ? "bg-ink/10" : ""
+                i === active ? "bg-leaf-chip" : ""
               }`}
             >
               <span className="block font-body text-sm text-ink">{s.primary}</span>

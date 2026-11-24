@@ -8,6 +8,7 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
+import type { Appearance } from "@stripe/stripe-js";
 import { getStripe } from "../lib/stripe-client";
 import AddressFields from "@/features/checkout/components/AddressFields";
 import QuantityStepper from "@/components/ui/QuantityStepper";
@@ -33,6 +34,38 @@ interface PayStepProps {
   // rather than showing a dead-end error.
   onNeedsReverify?: () => void;
 }
+
+// Stripe Elements theme: mint/teal, 16px radius, white fields — matches the
+// checkout's own inputs. Pure styling; no effect on the payment flow.
+const STRIPE_APPEARANCE: Appearance = {
+  theme: "flat",
+  variables: {
+    colorPrimary: "#0B7A6C",
+    colorBackground: "#FFFFFF",
+    colorText: "#0C3B33",
+    colorTextSecondary: "#35645A",
+    colorTextPlaceholder: "#5F8179",
+    colorDanger: "#C0362C",
+    fontFamily: '"Instrument Sans", system-ui, sans-serif',
+    borderRadius: "16px",
+    spacingUnit: "5px",
+    fontSizeBase: "16px",
+  },
+  rules: {
+    ".Input": {
+      border: "1px solid rgba(12, 59, 51, 0.13)",
+      boxShadow: "none",
+      padding: "16px 18px",
+    },
+    ".Input:focus": {
+      border: "1px solid #0B7A6C",
+      boxShadow: "0 0 0 3px rgba(11, 122, 108, 0.18)",
+    },
+    ".Label": { color: "#35645A", fontWeight: "500", marginBottom: "8px" },
+    ".Tab": { border: "1px solid rgba(12, 59, 51, 0.13)", boxShadow: "none" },
+    ".Tab--selected": { border: "1px solid #0B7A6C", boxShadow: "0 0 0 3px rgba(11, 122, 108, 0.18)" },
+  },
+};
 
 // Deferred PaymentIntent flow: the Payment Element is mounted with just
 // mode/amount/currency — no intent, no server call — so the customer can fill in
@@ -143,19 +176,23 @@ function PayInner({ email, onPaid, onQuantityChange, onNeedsReverify }: PayStepP
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onValid)} className="space-y-6">
-        <AddressFields />
+        <div className="co-card">
+          <AddressFields />
+        </div>
 
-        <div className="flex items-center justify-between">
-          <span className="font-body text-ink/70">Quantity</span>
+        <div className="co-card flex items-center justify-between">
+          <span className="font-body text-leaf-muted">Quantity</span>
           <QuantityStepper value={quantity} onChange={handleQuantityChange} disabled={submitting} />
         </div>
 
-        <PaymentElement />
+        <div className="co-card">
+          <PaymentElement />
+        </div>
 
         <button
           type="submit"
           disabled={!stripe || submitting}
-          className="w-full inline-flex items-center justify-center px-6 py-3 bg-cinnabar text-paper-bone font-body font-medium rounded-[4px] transition-opacity hover:opacity-90 disabled:opacity-50 cursor-pointer"
+          className="co-btn font-body"
         >
           {submitting ? "Processing…" : `Pay ${formatAmountShort(total)} ${PRODUCT.currency}`}
         </button>
@@ -180,6 +217,8 @@ export default function PayStep({
         amount: computeAmount(1),
         // Stripe expects a lowercase ISO currency code here.
         currency: PRODUCT.currency.toLowerCase(),
+        // Leaf Lab look for the card box (styling only).
+        appearance: STRIPE_APPEARANCE,
       }}
     >
       <PayInner

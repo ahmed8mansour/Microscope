@@ -56,6 +56,58 @@
   --glow-accent: 0 0 24px -4px rgba(203, 166, 247, 0.5);
 }
 
+/* --- "Leaf Lab" redesign tokens (light mint) ------------------------------
+   Additive and namespaced `--leaf-*` so they don't collide with the existing
+   --ink / --paper-bone tokens. Nothing consumes them yet; sections adopt them
+   one at a time. Source: design-reference/DESIGN-HANDOFF.md. */
+:root {
+  --leaf-bg: #EAF8F1;        /* default page background (mint) */
+  --leaf-ink: #0C3B33;       /* headlines + body text */
+  --leaf-muted: #35645A;     /* secondary text */
+  --leaf-accent: #0B7A6C;    /* buttons, eyebrow labels, scale-bar marker */
+  --leaf-accent-ink: #09695C; /* small accent TEXT on the light tints (>= 4.5:1) */
+  --leaf-btn-ink: #FFFFFF;   /* text on accent buttons */
+  --leaf-chip: #D3F1E5;      /* icon chips */
+  --leaf-stroke: #62C6AD;    /* outlined hero text */
+  --leaf-card: #FFFFFF;
+  --leaf-card-border: rgba(12, 59, 51, 0.13);
+  --leaf-card-radius: 34px;
+  --leaf-card-shadow: 0 22px 50px -26px rgba(12, 90, 70, 0.45);
+  --leaf-warm: #FF7A3D;      /* orange accent / small highlights */
+  --leaf-note: #C2410C;      /* handwritten notes */
+  --leaf-pollen: #FFD166;    /* creature + hidden-world colours */
+  --leaf-sky: #5EB6FF;
+  --leaf-pink: #FF8FB3;
+  --leaf-lime: #B6E34A;
+
+  /* Section tints: base colour + soft radial glow(s). */
+  --leaf-tint-mint: #EAF8F1;     /* hero, specs, checkout, leaf overlay */
+  --leaf-glow-mint-a: #C6F1DA;   /* top-right */
+  --leaf-glow-mint-b: #FFE8C6;   /* bottom-left */
+  --leaf-tint-pollen: #FFF9E7;   /* premise, reviews */
+  --leaf-glow-pollen: #FFEFB4;
+  --leaf-tint-water: #EAF6FF;    /* instrument */
+  --leaf-glow-water: #D4ECFF;
+  --leaf-tint-lime: #F0FAE6;     /* buy */
+  --leaf-glow-lime: #E2F6B8;
+}
+
+@theme inline {
+  --color-leaf-bg: var(--leaf-bg);
+  --color-leaf-ink: var(--leaf-ink);
+  --color-leaf-muted: var(--leaf-muted);
+  --color-leaf-accent: var(--leaf-accent);
+  --color-leaf-accent-ink: var(--leaf-accent-ink);
+  --color-leaf-chip: var(--leaf-chip);
+  --color-leaf-stroke: var(--leaf-stroke);
+  --color-leaf-warm: var(--leaf-warm);
+  --color-leaf-note: var(--leaf-note);
+  --color-leaf-pollen: var(--leaf-pollen);
+  --color-leaf-sky: var(--leaf-sky);
+  --color-leaf-pink: var(--leaf-pink);
+  --color-leaf-lime: var(--leaf-lime);
+}
+
 @theme inline {
   --color-paper-bone: var(--paper-bone);
   --color-ink: var(--ink);
@@ -137,6 +189,234 @@
   box-shadow: 0 14px 30px -18px rgba(0, 0, 0, 0.6);
 }
 [data-theme="dark"] .admin-focus:focus-visible { outline-color: var(--mauve-400); }
+
+/* --- Leaf Lab scope -------------------------------------------------------
+   A section opts in with `leaf-scope` (+ a tint class). It re-points the same
+   role tokens the dark landing uses, so existing bg-paper-bone / text-ink /
+   text-wattle-ink utilities resolve to the light mint values inside it. */
+.leaf-scope {
+  --paper-bone: var(--leaf-bg);
+  --ink: var(--leaf-ink);
+  --wattle: var(--leaf-accent);
+  --wattle-ink: var(--leaf-accent-ink);
+  --cinnabar: var(--leaf-accent);
+  --accent-ink: var(--leaf-btn-ink);
+  color: var(--leaf-ink);
+}
+.leaf-tint-pollen {
+  background-color: var(--leaf-tint-pollen);
+  background-image:
+    radial-gradient(900px 620px at 92% 4%, var(--leaf-glow-pollen) 0%, transparent 62%),
+    radial-gradient(820px 620px at 4% 100%, #CDF2DF 0%, transparent 60%);
+}
+
+/* Cursor flashlight over light sections: warm soft spotlight, no dark vignette. */
+.cursor-spot[data-light="true"] { mix-blend-mode: multiply; }
+.cursor-vignette[data-light="true"] { opacity: 0; }
+
+.leaf-tint-water {
+  background-color: var(--leaf-tint-water);
+  background-image:
+    radial-gradient(900px 620px at 92% 4%, var(--leaf-glow-water) 0%, transparent 62%),
+    radial-gradient(820px 620px at 4% 100%, #DDF6E8 0%, transparent 60%);
+}
+.leaf-tint-mint {
+  background-color: var(--leaf-tint-mint);
+  background-image:
+    radial-gradient(900px 620px at 92% 4%, var(--leaf-glow-mint-a) 0%, transparent 62%),
+    radial-gradient(820px 620px at 4% 100%, var(--leaf-glow-mint-b) 0%, transparent 60%);
+}
+
+.leaf-tint-lime {
+  background-color: var(--leaf-tint-lime);
+  background-image:
+    radial-gradient(900px 620px at 92% 4%, var(--leaf-glow-lime) 0%, transparent 62%),
+    radial-gradient(820px 620px at 4% 100%, #CDF2DF 0%, transparent 60%);
+}
+
+/* Buy: viewfinder brackets that tighten, cell burst, blur-to-sharp on hover. */
+@keyframes leaf-lock {
+  0% { transform: scale(1.22); opacity: 0; }
+  25% { opacity: 1; }
+  60%, 100% { transform: scale(1); opacity: 1; }
+}
+@keyframes leaf-burst {
+  0% { transform: translate(0, 0) scale(0.3); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(1) rotate(var(--rot)); opacity: 0; }
+}
+@keyframes leaf-focus {
+  0% { filter: blur(6px); transform: scale(0.97); }
+  100% { filter: blur(0); transform: scale(1); }
+}
+.leaf-bracket {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border: 3px solid var(--leaf-accent);
+  pointer-events: none;
+  animation: leaf-lock 3s ease-out infinite;
+}
+.leaf-cell {
+  border: 2px solid var(--leaf-ink);
+  opacity: 0;
+  animation: leaf-burst 3.2s ease-out infinite;
+  animation-delay: var(--del);
+}
+.leaf-buy:hover { animation: leaf-focus 0.5s ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  .leaf-bracket, .leaf-cell, .leaf-buy:hover { animation: none; }
+  .leaf-bracket { opacity: 1; }
+}
+
+/* ============================================================
+   Field-notebook look (Part A): dotted paper, crop marks, ruler, tags, tape,
+   handwritten notes. Decorative only — pointer-events none, behind text.
+   ============================================================ */
+.leaf-scope {
+  position: relative;
+  isolation: isolate;
+}
+.leaf-scope::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(12, 59, 51, 0.2) 1.4px, transparent 1.5px);
+  background-size: 30px 30px;
+  opacity: 0.4;
+}
+
+.nb-overlay[data-tone="light"] { --nb-ink: var(--leaf-ink); }
+.nb-overlay[data-tone="dark"] { --nb-ink: #F5F2FA; }
+.nb-crop {
+  position: absolute;
+  display: none;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--nb-ink);
+  opacity: 0.35;
+  transition: opacity 0.3s;
+}
+/* Two edges per corner (plain CSS: unlayered rules would beat Tailwind's border-*-0). */
+.nb-crop--tl { left: 30px; top: 30px; border-right: 0; border-bottom: 0; }
+.nb-crop--tr { right: 30px; top: 30px; border-left: 0; border-bottom: 0; }
+.nb-crop--bl { left: 30px; bottom: 30px; border-right: 0; border-top: 0; }
+.nb-crop--br { right: 30px; bottom: 30px; border-left: 0; border-top: 0; }
+@media (min-width: 768px) { .nb-crop { display: block; } }
+.nb-marker { transition: transform 0.18s linear; }
+/* Hero keeps a simplified ruler: only the 1× and 200× ends. */
+.nb-overlay[data-simple="true"] .nb-tick[data-minor="true"],
+.nb-overlay[data-simple="true"] .nb-label[data-mid="true"] { display: none; }
+@media (prefers-reduced-motion: reduce) { .nb-marker { transition: none; } }
+
+.nb-hand {
+  font-family: var(--font-caveat), "Caveat", "Comic Sans MS", cursive;
+  color: var(--leaf-note);
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.nb-tag {
+  position: absolute;
+  display: none; /* shown from md (or lg with .nb-tag--lg) — unlayered CSS beats Tailwind's hidden/md: */
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  background: #FFF6DA;
+  border: 1px solid rgba(12, 59, 51, 0.22);
+  box-shadow: 0 6px 14px -8px rgba(12, 59, 51, 0.5);
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--leaf-ink);
+  pointer-events: none;
+}
+@media (min-width: 768px) { .nb-tag { display: inline-flex; } }
+@media (max-width: 1023px) { .nb-tag--lg { display: none; } }
+.nb-tag::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1.5px solid var(--leaf-ink);
+}
+.nb-tape {
+  position: absolute;
+  width: 112px;
+  height: 30px;
+  background: rgba(255, 209, 102, 0.85);
+  box-shadow: 0 2px 4px rgba(12, 59, 51, 0.12);
+  pointer-events: none;
+}
+
+@keyframes leaf-drift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+.leaf-drift { animation: leaf-drift var(--dur, 6s) ease-in-out infinite; animation-delay: var(--del, 0s); }
+/* --- Section colour shifts: stacked tint layers cross-faded with opacity ---- */
+.tint-layer {
+  opacity: 0;
+  transition: opacity 0.9s ease;
+  will-change: opacity;
+}
+.tint-layer[data-layer="mint"] {
+  background-color: var(--leaf-tint-mint);
+  background-image:
+    radial-gradient(900px 620px at 92% 4%, var(--leaf-glow-mint-a) 0%, transparent 62%),
+    radial-gradient(820px 620px at 4% 100%, var(--leaf-glow-mint-b) 0%, transparent 60%);
+}
+.tint-layer[data-layer="pollen"] {
+  background-color: var(--leaf-tint-pollen);
+  background-image:
+    radial-gradient(900px 620px at 92% 4%, var(--leaf-glow-pollen) 0%, transparent 62%),
+    radial-gradient(820px 620px at 4% 100%, #CDF2DF 0%, transparent 60%);
+}
+.tint-layer[data-layer="water"] {
+  background-color: var(--leaf-tint-water);
+  background-image:
+    radial-gradient(900px 620px at 92% 4%, var(--leaf-glow-water) 0%, transparent 62%),
+    radial-gradient(820px 620px at 4% 100%, #DDF6E8 0%, transparent 60%);
+}
+.tint-layer[data-layer="lime"] {
+  background-color: var(--leaf-tint-lime);
+  background-image:
+    radial-gradient(900px 620px at 92% 4%, var(--leaf-glow-lime) 0%, transparent 62%),
+    radial-gradient(820px 620px at 4% 100%, #CDF2DF 0%, transparent 60%);
+}
+.tint-backdrop[data-tint="mint"] .tint-layer[data-layer="mint"],
+.tint-backdrop[data-tint="pollen"] .tint-layer[data-layer="pollen"],
+.tint-backdrop[data-tint="water"] .tint-layer[data-layer="water"],
+.tint-backdrop[data-tint="lime"] .tint-layer[data-layer="lime"] { opacity: 1; }
+/* Landing sections let the fixed layers show through (the checkout page keeps
+   its own .leaf-tint-* background). */
+.leaf-scope.leaf-on-backdrop { background: none; }
+@media (prefers-reduced-motion: reduce) { .tint-layer { transition: none; } }
+
+/* Hero (calm layout): smaller outlined rows at ~60% stroke opacity, a large solid row. */
+.leaf-scope .hero-line--outline {
+  -webkit-text-stroke: 2px color-mix(in srgb, var(--leaf-stroke) 60%, transparent);
+  font-size: 11.5vw;
+}
+.leaf-scope .hero-line--solid { font-size: 15vw; }
+@media (min-width: 768px) {
+  .leaf-scope .hero-line--outline { font-size: 8.2vw; }
+  .leaf-scope .hero-line--solid { font-size: 10.4vw; }
+}
+.nb-dots-faint::before { opacity: 0.28; }
+/* The hero must not form its own stacking context: its nav + buttons (z-40) sit above the fixed 3D canvas (z-30), as before. */
+.leaf-scope.leaf-no-isolate { isolation: auto; }
+
+/* Off-screen sprites stop animating (set by Creature via IntersectionObserver). */
+.leaf-drift[data-paused="true"] { animation-play-state: paused; }
+.nb-creature { z-index: -1; will-change: transform; } /* behind text, above the section background */
+@media (prefers-reduced-motion: reduce) {
+  .leaf-drift { animation: none; }
+}
 
 /* Rack-focus reveal — targets default to sharp (fully readable without JS);
    useRackFocus starts them blurred + dim, then racks them into focus on
@@ -459,4 +739,91 @@ body {
 .admin-focus:focus-visible {
   outline: 2px solid var(--eucalypt);
   outline-offset: 2px;
+}
+
+/* ── Checkout (Leaf Lab) ─────────────────────────────────────────────────────
+   Shared look for every checkout step: white 16px-radius fields, 64px buttons
+   with a soft shadow, rounded white cards, a mint notice banner. Styles only. */
+.co-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--leaf-muted);
+}
+.co-field {
+  width: 100%;
+  height: 60px;
+  padding: 0 18px;
+  border-radius: 16px;
+  border: 1px solid var(--leaf-card-border);
+  background: #fff;
+  color: var(--leaf-ink);
+  font-size: 17px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.co-field--icon { padding-left: 48px; }
+.co-field:focus {
+  border-color: var(--leaf-accent);
+  box-shadow: 0 0 0 3px rgba(11, 122, 108, 0.18);
+}
+.co-btn {
+  display: inline-flex;
+  width: 100%;
+  height: 64px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 30px;
+  border: 0;
+  border-radius: 16px;
+  background: var(--leaf-accent);
+  color: var(--leaf-btn-ink);
+  font-size: 19px;
+  font-weight: 600;
+  box-shadow: var(--leaf-card-shadow);
+  cursor: pointer;
+  transition: transform 0.15s, filter 0.15s;
+}
+.co-btn:hover { filter: brightness(1.06); transform: translateY(-1px); }
+.co-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; filter: none; }
+.co-btn--auto { width: auto; }
+.co-card {
+  border-radius: 24px;
+  border: 1px solid var(--leaf-card-border);
+  background: var(--leaf-card);
+  box-shadow: var(--leaf-card-shadow);
+  padding: 24px;
+}
+.co-banner {
+  border-radius: 16px;
+  border: 1px solid rgba(11, 122, 108, 0.3);
+  background: var(--leaf-chip);
+  color: var(--leaf-ink);
+  padding: 12px 16px;
+}
+.co-step {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid var(--leaf-card-border);
+  background: var(--leaf-chip);
+  color: var(--leaf-accent-ink);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  transition: filter 0.15s;
+}
+.co-step:hover { filter: brightness(0.96); }
+.co-step:disabled { opacity: 0.4; cursor: not-allowed; }
+.co-link {
+  color: var(--leaf-muted);
+  text-decoration: underline;
+  text-decoration-color: var(--leaf-accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
 }

@@ -8,10 +8,10 @@ import StreetAutocomplete from "./StreetAutocomplete";
 import type { ParsedPlace } from "../lib/places";
 
 const FIELD_CLASS =
-  "w-full border border-ink/20 rounded-[4px] px-3 py-2 font-body text-ink bg-paper-bone focus:outline-none focus:border-cinnabar";
+  "co-field font-body";
 
 function Req() {
-  return <span className="text-cinnabar"> *</span>;
+  return <span className="text-leaf-accent-ink"> *</span>;
 }
 
 // Structured shipping address fields (Alibaba-style). Renders *only* the fields
@@ -60,7 +60,7 @@ export default function AddressFields() {
     <div className="space-y-4 text-left">
       {/* Country / region */}
       <div>
-        <label htmlFor="country" className="block font-body text-sm text-ink/70 mb-1">
+        <label htmlFor="country" className="co-label">
           Country / region<Req />
         </label>
         <select id="country" autoComplete="country" {...register("country")} className={FIELD_CLASS}>
@@ -75,7 +75,7 @@ export default function AddressFields() {
 
       {/* Full name */}
       <div>
-        <label htmlFor="recipientName" className="block font-body text-sm text-ink/70 mb-1">
+        <label htmlFor="recipientName" className="co-label">
           Full name<Req />
         </label>
         <input
@@ -91,7 +91,7 @@ export default function AddressFields() {
 
       {/* Street address — Places autocomplete */}
       <div>
-        <label htmlFor="line1" className="block font-body text-sm text-ink/70 mb-1">
+        <label htmlFor="line1" className="co-label">
           Street address or P.O. box<Req />
         </label>
         <Controller
@@ -114,7 +114,7 @@ export default function AddressFields() {
 
       {/* Apt / suite / unit */}
       <div>
-        <label htmlFor="line2" className="block font-body text-sm text-ink/70 mb-1">
+        <label htmlFor="line2" className="co-label">
           Apt, suite, unit <span className="text-ink/40">(optional)</span>
         </label>
         <input
@@ -129,7 +129,7 @@ export default function AddressFields() {
       {/* Suburb + State (side by side on wider screens) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="city" className="block font-body text-sm text-ink/70 mb-1">
+          <label htmlFor="city" className="co-label">
             Suburb<Req />
           </label>
           <input
@@ -142,7 +142,7 @@ export default function AddressFields() {
         </div>
 
         <div>
-          <label htmlFor="state" className="block font-body text-sm text-ink/70 mb-1">
+          <label htmlFor="state" className="co-label">
             State / territory<Req />
           </label>
           {hasStateList ? (
@@ -173,7 +173,7 @@ export default function AddressFields() {
 
       {/* Postcode */}
       <div>
-        <label htmlFor="postalCode" className="block font-body text-sm text-ink/70 mb-1">
+        <label htmlFor="postalCode" className="co-label">
           Postcode<Req />
         </label>
         <input
