@@ -59,18 +59,20 @@ export default function HeroLens() {
       return glCanvas;
     };
 
-    const nearButtons = (rect: DOMRect) => {
-      const g = hero.querySelectorAll("[data-hero-cta]");
-      const box = g[g.length - 1]?.getBoundingClientRect();
-      if (!box) return false;
-      // ~580 x 160 around the two buttons (a little bigger than they are)
-      const px = Math.max(0, (580 - box.width) / 2);
-      const py = Math.max(0, (160 - box.height) / 2);
-      return (
-        last.x >= box.left - px && last.x <= box.right + px &&
-        last.y >= box.top - py && last.y <= box.bottom + py &&
-        rect.height > 0
-      );
+    // The lens switches off near anything marked data-lens-exclude (the two hero
+    // buttons and the cart). Rectangles are measured live, so it keeps working
+    // when the layout changes; PAD px of slack on every side.
+    const PAD = 90;
+    const nearExcluded = () => {
+      for (const el of document.querySelectorAll("[data-lens-exclude]")) {
+        const b = el.getBoundingClientRect();
+        if (b.width === 0 && b.height === 0) continue;
+        if (
+          last.x >= b.left - PAD && last.x <= b.right + PAD &&
+          last.y >= b.top - PAD && last.y <= b.bottom + PAD
+        ) return true;
+      }
+      return false;
     };
 
     const placePill = (rect: DOMRect) => {
@@ -136,7 +138,7 @@ export default function HeroLens() {
       }
       const mx = last.x - rect.left;
       const my = last.y - rect.top;
-      const near = nearButtons(rect);
+      const near = nearExcluded();
       root.style.opacity = near ? "0" : "1";
       if (!near) {
         root.style.setProperty("--mx", `${mx}px`);

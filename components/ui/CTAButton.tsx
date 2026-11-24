@@ -9,6 +9,9 @@ interface CTAButtonProps {
   variant?: "primary" | "secondary";
 }
 
+// Extra attributes (e.g. data-lens-exclude) pass straight through to the element.
+type RestProps = Omit<React.HTMLAttributes<HTMLElement>, keyof CTAButtonProps>;
+
 const VARIANTS: Record<NonNullable<CTAButtonProps["variant"]>, string> = {
   primary: "bg-cinnabar text-accent-ink font-semibold hover:shadow-[var(--glow-accent)]",
   secondary:
@@ -21,7 +24,8 @@ export default function CTAButton({
   onClick,
   className = "",
   variant = "primary",
-}: CTAButtonProps) {
+  ...rest
+}: CTAButtonProps & RestProps) {
   const baseClasses =
     "inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 font-body text-lg font-medium rounded-[var(--radius-sm)] cursor-pointer " +
     "transition-[transform,box-shadow,border-color] duration-200 ease-[cubic-bezier(0.25,1,0.5,1)] " +
@@ -33,14 +37,14 @@ export default function CTAButton({
 
   if (href) {
     return (
-      <a href={href} className={baseClasses}>
+      <a href={href} className={baseClasses} {...rest}>
         {children}
       </a>
     );
   }
 
   return (
-    <button onClick={onClick} className={baseClasses}>
+    <button onClick={onClick} className={baseClasses} {...rest}>
       {children}
     </button>
   );

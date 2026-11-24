@@ -103,7 +103,7 @@ export default function Hero() {
           A MICROSCOPE FOR CURIOUS KIDS
         </Eyebrow>
         <div data-hero-cta className="flex flex-wrap items-center justify-center gap-x-9 gap-y-6">
-          <CTAButton onClick={() => scrollTo("discovery")} className="gap-2 rounded-full!">
+          <CTAButton onClick={() => scrollTo("discovery")} className="gap-2 rounded-full!" data-lens-exclude>
             Start focusing
             <svg aria-hidden width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 5v14" />
@@ -112,6 +112,7 @@ export default function Hero() {
           </CTAButton>
           <Link
             href="/checkout"
+            data-lens-exclude
             className="inline-flex items-center gap-2 font-body text-ink underline decoration-leaf-accent decoration-2 underline-offset-[6px] transition-opacity hover:opacity-70 cursor-pointer"
           >
             Or shop now
@@ -128,7 +129,7 @@ export default function Hero() {
         <span className="font-display text-xl md:text-2xl text-ink tracking-tight">
           Field Notes
         </span>
-        <button aria-label="Cart" className="text-ink hover:opacity-70 transition-opacity">
+        <button aria-label="Cart" data-lens-exclude className="text-ink hover:opacity-70 transition-opacity">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
             <line x1="3" y1="6" x2="21" y2="6" />
