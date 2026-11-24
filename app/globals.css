@@ -356,6 +356,45 @@
   50% { transform: translateY(-14px); }
 }
 .leaf-drift { animation: leaf-drift var(--dur, 6s) ease-in-out infinite; animation-delay: var(--del, 0s); }
+/* --- Section colour shifts: stacked tint layers cross-faded with opacity ---- */
+.tint-layer {
+  opacity: 0;
+  transition: opacity 0.9s ease;
+  will-change: opacity;
+}
+.tint-layer[data-layer="mint"] {
+  background-color: var(--leaf-tint-mint);
+  background-image:
+    radial-gradient(900px 620px at 92% 4%, var(--leaf-glow-mint-a) 0%, transparent 62%),
+    radial-gradient(820px 620px at 4% 100%, var(--leaf-glow-mint-b) 0%, transparent 60%);
+}
+.tint-layer[data-layer="pollen"] {
+  background-color: var(--leaf-tint-pollen);
+  background-image:
+    radial-gradient(900px 620px at 92% 4%, var(--leaf-glow-pollen) 0%, transparent 62%),
+    radial-gradient(820px 620px at 4% 100%, #CDF2DF 0%, transparent 60%);
+}
+.tint-layer[data-layer="water"] {
+  background-color: var(--leaf-tint-water);
+  background-image:
+    radial-gradient(900px 620px at 92% 4%, var(--leaf-glow-water) 0%, transparent 62%),
+    radial-gradient(820px 620px at 4% 100%, #DDF6E8 0%, transparent 60%);
+}
+.tint-layer[data-layer="lime"] {
+  background-color: var(--leaf-tint-lime);
+  background-image:
+    radial-gradient(900px 620px at 92% 4%, var(--leaf-glow-lime) 0%, transparent 62%),
+    radial-gradient(820px 620px at 4% 100%, #CDF2DF 0%, transparent 60%);
+}
+.tint-backdrop[data-tint="mint"] .tint-layer[data-layer="mint"],
+.tint-backdrop[data-tint="pollen"] .tint-layer[data-layer="pollen"],
+.tint-backdrop[data-tint="water"] .tint-layer[data-layer="water"],
+.tint-backdrop[data-tint="lime"] .tint-layer[data-layer="lime"] { opacity: 1; }
+/* Landing sections let the fixed layers show through (the checkout page keeps
+   its own .leaf-tint-* background). */
+.leaf-scope.leaf-on-backdrop { background: none; }
+@media (prefers-reduced-motion: reduce) { .tint-layer { transition: none; } }
+
 /* Off-screen sprites stop animating (set by Creature via IntersectionObserver). */
 .leaf-drift[data-paused="true"] { animation-play-state: paused; }
 .nb-creature { z-index: -1; will-change: transform; } /* behind text, above the section background */

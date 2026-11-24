@@ -215,7 +215,7 @@ export default function Instrument() {
   const specsRef = useReveal<HTMLDivElement>();
   return (
     <>
-      <section id="instrument" className="leaf-scope leaf-tint-water relative pt-[var(--space-9)] md:pt-[var(--space-10)] pb-[var(--space-8)]">
+      <section id="instrument" data-tint="water" className="leaf-scope leaf-tint-water leaf-on-backdrop relative pt-[var(--space-9)] md:pt-[var(--space-10)] pb-[var(--space-8)]">
         <Creature kind="diatom" className="right-6 top-10 w-[70px] md:right-[3%] md:top-[130px] md:w-[100px]" dur={6.5} />
         <Creature kind="pollen" className="bottom-[7%] left-[8%] hidden w-[78px] md:block" dur={5} delay={1.5} />
         <div ref={ref} className="relative w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-16">
@@ -246,7 +246,7 @@ export default function Instrument() {
       </section>
 
       {/* Spec sheet — three cards on the mint tint */}
-      <section id="specs" className="leaf-scope leaf-tint-mint relative py-[var(--space-8)] md:py-[var(--space-9)]">
+      <section id="specs" data-tint="mint" className="leaf-scope leaf-tint-mint leaf-on-backdrop relative py-[var(--space-8)] md:py-[var(--space-9)]">
         <Creature kind="cell" className="bottom-[10%] left-[9%] hidden w-[70px] md:block" dur={6} />
         <Creature kind="diatom" className="bottom-[10%] right-[3%] hidden w-[100px] md:block" dur={7.5} delay={2} />
         <div ref={specsRef} className="relative w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-16">

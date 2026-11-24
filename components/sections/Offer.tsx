@@ -69,7 +69,8 @@ export default function Offer() {
   return (
     <section
       id="offer"
-      className="leaf-scope leaf-tint-lime relative overflow-hidden py-[var(--space-9)] md:py-[var(--space-10)]"
+      data-tint="lime"
+      className="leaf-scope leaf-tint-lime leaf-on-backdrop relative overflow-hidden py-[var(--space-9)] md:py-[var(--space-10)]"
     >
       <Creature kind="diatom" className="right-6 top-10 w-[64px] md:right-[8%] md:top-[16%] md:w-[100px]" dur={6.5} />
       <Creature kind="waterbear" className="bottom-[14%] left-[9%] hidden w-[96px] md:block" dur={7} delay={2} />

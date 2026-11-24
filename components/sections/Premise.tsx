@@ -24,7 +24,8 @@ export default function Premise() {
   return (
     <section
       id="premise"
-      className="leaf-scope leaf-tint-pollen relative min-h-dvh flex items-start md:items-center overflow-hidden pt-[44vh] md:pt-0"
+      data-tint="pollen"
+      className="leaf-scope leaf-tint-pollen leaf-on-backdrop relative min-h-dvh flex items-start md:items-center overflow-hidden pt-[44vh] md:pt-0"
     >
       <Creature kind="waterbear" className="right-[2%] top-[5%] hidden w-[100px] md:block" dur={7} />
       <Creature kind="pollen" className="bottom-[3%] left-[50%] hidden w-[70px] md:block" dur={5.5} delay={2} />

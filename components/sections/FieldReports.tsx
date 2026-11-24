@@ -49,7 +49,8 @@ export default function FieldReports() {
   return (
     <section
       id="field-reports"
-      className="leaf-scope leaf-tint-pollen relative overflow-hidden py-[var(--space-9)] md:py-[var(--space-10)]"
+      data-tint="pollen"
+      className="leaf-scope leaf-tint-pollen leaf-on-backdrop relative overflow-hidden py-[var(--space-9)] md:py-[var(--space-10)]"
     >
       <Creature kind="pollen" className="left-[5%] top-[6%] hidden w-[84px] md:block" dur={6} />
       <Creature kind="waterbear" className="bottom-[5%] right-[2%] hidden w-[100px] md:block" dur={7} delay={3} />
