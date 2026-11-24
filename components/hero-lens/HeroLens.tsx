@@ -21,6 +21,10 @@ import { LENS_RADIUS, LENS_ZOOM } from "./config";
 //  - Microscope: the 3D canvas is drawn into a 2D canvas each frame (only the
 //    small square under the lens), which the 1.8x scale then magnifies.
 //    Needs `preserveDrawingBuffer` on the 3D canvas (ProductScene.tsx).
+//  - Safety net: if the 3D buffer ever reads back blank (or preserveDrawingBuffer
+//    is not in effect), a console warning is logged once and a static, magnified
+//    snapshot of the microscope (public/images/microscope-lens.png) is shown in
+//    the lens instead.
 
 const R = LENS_RADIUS;
 const COPY_VARS = {
@@ -35,6 +39,7 @@ export default function HeroLens() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pillRef = useRef<HTMLSpanElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
+  const fallbackRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -42,8 +47,9 @@ export default function HeroLens() {
     const cv = canvasRef.current;
     const pill = pillRef.current;
     const ring = ringRef.current;
+    const fallback = fallbackRef.current;
     const hero = root?.closest("section") as HTMLElement | null;
-    if (!root || !zoom || !cv || !pill || !ring || !hero) return;
+    if (!root || !zoom || !cv || !pill || !ring || !fallback || !hero) return;
     const ctx = cv.getContext("2d");
     if (!ctx) return;
 
@@ -52,11 +58,99 @@ export default function HeroLens() {
     let raf = 0;
     let glCanvas: HTMLCanvasElement | null = null;
 
+    // The hero's 3D canvas: a full-viewport canvas inside a position:fixed ancestor
+    // (ProductScene), not our own copy canvas and not the sticky leaf-journey one.
     const findGl = () => {
       if (glCanvas && glCanvas.isConnected) return glCanvas;
-      const c = document.querySelector("canvas");
-      glCanvas = c && c.clientHeight >= window.innerHeight * 0.9 ? c : null;
+      glCanvas = null;
+      for (const c of document.querySelectorAll("canvas")) {
+        if (root.contains(c)) continue;
+        // R3F wraps the canvas in its own div, so look a few ancestors up.
+        let fixed = false;
+        for (let el = c.parentElement, i = 0; el && i < 4; el = el.parentElement, i++) {
+          if (getComputedStyle(el).position === "fixed") {
+            fixed = true;
+            break;
+          }
+        }
+        if (!fixed) continue;
+        if (c.clientHeight >= window.innerHeight * 0.9) {
+          glCanvas = c;
+          break;
+        }
+      }
       return glCanvas;
+    };
+
+    // --- self-check -------------------------------------------------------
+    // Every 30 frames: is the 3D buffer readable? (tiny downscaled copy of the
+    // whole canvas). Blank 3 checks in a row while the microscope should be on
+    // screen => warn once and fall back to the static snapshot.
+    const probe = document.createElement("canvas");
+    probe.width = 48;
+    probe.height = 27;
+    const pctx = probe.getContext("2d");
+    let frames = 0;
+    let blankRuns = 0;
+    let logged = false;
+    let usingFallback = false;
+    const selfCheck = () => {
+      const gl = findGl();
+      if (!gl || !pctx || usingFallback) return;
+      if (window.scrollY > window.innerHeight * 0.5) return; // microscope may be off-screen
+      pctx.clearRect(0, 0, 48, 27);
+      try {
+        pctx.drawImage(gl, 0, 0, 48, 27);
+      } catch {
+        return;
+      }
+      const d = pctx.getImageData(0, 0, 48, 27).data;
+      let opaque = 0;
+      for (let i = 3; i < d.length; i += 4) if (d[i] > 0) opaque++;
+      const ctxGl = (gl.getContext("webgl2") || gl.getContext("webgl")) as WebGLRenderingContext | null;
+      const attrs = ctxGl?.getContextAttributes();
+      if (!logged) {
+        logged = true;
+        console.info("[HeroLens] 3D canvas copy check", {
+          preserveDrawingBuffer: attrs?.preserveDrawingBuffer,
+          canvas: `${gl.width}x${gl.height} (css ${gl.clientWidth}x${gl.clientHeight})`,
+          dpr: window.devicePixelRatio,
+          nonTransparentSamples: `${opaque}/${48 * 27}`,
+        });
+      }
+      // Compare the square under the lens: pixels in the 3D canvas vs. what actually
+      // landed in the lens canvas. Source has pixels but the copy is empty => the
+      // copy path is broken on this browser/GPU.
+      let copyBroken = false;
+      if (lastCopy.ok) {
+        pctx.clearRect(0, 0, 48, 27);
+        try {
+          pctx.drawImage(gl, lastCopy.sx, lastCopy.sy, lastCopy.sw, lastCopy.sw, 0, 0, 27, 27);
+          const sd = pctx.getImageData(0, 0, 27, 27).data;
+          let src = 0;
+          for (let i = 3; i < sd.length; i += 4) if (sd[i] > 0) src++;
+          const dx = Math.max(0, Math.round(lastCopy.dx));
+          const dy = Math.max(0, Math.round(lastCopy.dy));
+          const dd = ctx.getImageData(dx, dy, Math.max(1, Math.min(Math.round(lastCopy.dw), cv.width - dx)), Math.max(1, Math.min(Math.round(lastCopy.dw), cv.height - dy))).data;
+          let dst = 0;
+          for (let i = 3; i < dd.length; i += 4) if (dd[i] > 0) dst++;
+          copyBroken = src > 30 && dst === 0;
+        } catch {
+          /* ignore */
+        }
+      }
+      blankRuns = opaque === 0 || attrs?.preserveDrawingBuffer === false || copyBroken ? blankRuns + 1 : 0;
+      if (blankRuns >= 3) {
+        usingFallback = true;
+        console.warn(
+          "[HeroLens] 3D canvas copy is blank (preserveDrawingBuffer=%s, nonTransparentSamples=%d); using the static microscope image.",
+          attrs?.preserveDrawingBuffer,
+          opaque
+        );
+        fallback.src = "/images/microscope-lens.png";
+        fallback.style.display = "block";
+        ctx.clearRect(0, 0, cv.width, cv.height);
+      }
     };
 
     // The lens switches off near anything marked data-lens-exclude (the two hero
@@ -107,7 +201,10 @@ export default function HeroLens() {
       });
     };
 
+    // Last copy geometry, so selfCheck can compare source and destination.
+    const lastCopy = { sx: 0, sy: 0, sw: 0, dx: 0, dy: 0, dw: 0, ok: false };
     const drawMicroscope = (rect: DOMRect, mx: number, my: number) => {
+      if (usingFallback) return;
       const gl = findGl();
       const dpr = sizeCanvas(rect);
       ctx.clearRect(0, 0, cv.width, cv.height);
@@ -115,6 +212,13 @@ export default function HeroLens() {
       const g = gl.getBoundingClientRect();
       const gs = gl.width / (g.width || 1); // 3D-canvas pixels per CSS pixel
       const r = R / LENS_ZOOM + 12; // only the square under the lens is copied
+      lastCopy.sx = (last.x - g.left - r) * gs;
+      lastCopy.sy = (last.y - g.top - r) * gs;
+      lastCopy.sw = 2 * r * gs;
+      lastCopy.dx = (mx - r) * dpr;
+      lastCopy.dy = (my - r) * dpr;
+      lastCopy.dw = 2 * r * dpr;
+      lastCopy.ok = true;
       try {
         ctx.drawImage(
           gl,
@@ -147,6 +251,13 @@ export default function HeroLens() {
         placePill(rect);
         syncRows();
         drawMicroscope(rect, mx, my);
+        if (++frames % 30 === 0) selfCheck();
+        // The live model is fixed to the viewport (it does not scroll with the hero),
+        // so place the static snapshot in viewport terms, not hero terms.
+        if (usingFallback) {
+          fallback.style.left = `${rect.width * 0.497}px`;
+          fallback.style.top = `${window.innerHeight * 0.492 - rect.top}px`;
+        }
       }
       raf = requestAnimationFrame(frame);
     };
@@ -233,6 +344,15 @@ export default function HeroLens() {
             </div>
           </div>
           <canvas ref={canvasRef} className="absolute left-0 top-0 h-full w-full" />
+          {/* Static fallback (only shown if the live copy fails; see selfCheck). */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            ref={fallbackRef}
+            alt=""
+            aria-hidden
+            className="absolute"
+            style={{ display: "none", height: "46vh", width: "auto", transform: "translate(-50%, -50%)" }}
+          />
           <span
             ref={pillRef}
             className="text-caption absolute inline-block rounded-full border border-white/35 bg-[rgba(6,43,40,0.7)] px-[18px] py-2 text-center text-[#B6F5E0]"
