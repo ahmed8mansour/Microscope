@@ -73,7 +73,7 @@
   --leaf-card-radius: 34px;
   --leaf-card-shadow: 0 22px 50px -26px rgba(12, 90, 70, 0.45);
   --leaf-warm: #FF7A3D;      /* orange accent / small highlights */
-  --leaf-note: #E8590C;      /* handwritten notes */
+  --leaf-note: #C2410C;      /* handwritten notes */
   --leaf-pollen: #FFD166;    /* creature + hidden-world colours */
   --leaf-sky: #5EB6FF;
   --leaf-pink: #FF8FB3;
@@ -187,6 +187,35 @@
   box-shadow: 0 14px 30px -18px rgba(0, 0, 0, 0.6);
 }
 [data-theme="dark"] .admin-focus:focus-visible { outline-color: var(--mauve-400); }
+
+/* --- Leaf Lab scope -------------------------------------------------------
+   A section opts in with `leaf-scope` (+ a tint class). It re-points the same
+   role tokens the dark landing uses, so existing bg-paper-bone / text-ink /
+   text-wattle-ink utilities resolve to the light mint values inside it. */
+.leaf-scope {
+  --paper-bone: var(--leaf-bg);
+  --ink: var(--leaf-ink);
+  --wattle: var(--leaf-accent);
+  --wattle-ink: var(--leaf-accent);
+  --cinnabar: var(--leaf-accent);
+  --accent-ink: var(--leaf-btn-ink);
+  color: var(--leaf-ink);
+}
+.leaf-tint-pollen {
+  background-color: var(--leaf-tint-pollen);
+  background-image:
+    radial-gradient(900px 620px at 92% 4%, var(--leaf-glow-pollen) 0%, transparent 62%),
+    radial-gradient(820px 620px at 4% 100%, #CDF2DF 0%, transparent 60%);
+}
+
+@keyframes leaf-drift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+.leaf-drift { animation: leaf-drift var(--dur, 6s) ease-in-out infinite; animation-delay: var(--del, 0s); }
+@media (prefers-reduced-motion: reduce) {
+  .leaf-drift { animation: none; }
+}
 
 /* Rack-focus reveal — targets default to sharp (fully readable without JS);
    useRackFocus starts them blurred + dim, then racks them into focus on
