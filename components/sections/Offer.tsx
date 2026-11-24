@@ -79,7 +79,7 @@ export default function Offer() {
           One microscope. A whole world your kid hasn&rsquo;t met yet.
         </p>
 
-        <div data-reveal className="font-utility text-base md:text-lg text-leaf-muted space-y-2 mb-10">
+        <div data-reveal className="relative z-10 font-utility text-base md:text-lg text-leaf-muted space-y-2 mb-10">
           <p className="text-ink text-2xl md:text-3xl font-semibold">
             {formatPrice()}
           </p>
