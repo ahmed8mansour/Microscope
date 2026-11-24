@@ -212,6 +212,19 @@
 .cursor-spot[data-light="true"] { mix-blend-mode: multiply; }
 .cursor-vignette[data-light="true"] { opacity: 0; }
 
+.leaf-tint-water {
+  background-color: var(--leaf-tint-water);
+  background-image:
+    radial-gradient(900px 620px at 92% 4%, var(--leaf-glow-water) 0%, transparent 62%),
+    radial-gradient(820px 620px at 4% 100%, #DDF6E8 0%, transparent 60%);
+}
+.leaf-tint-mint {
+  background-color: var(--leaf-tint-mint);
+  background-image:
+    radial-gradient(900px 620px at 92% 4%, var(--leaf-glow-mint-a) 0%, transparent 62%),
+    radial-gradient(820px 620px at 4% 100%, var(--leaf-glow-mint-b) 0%, transparent 60%);
+}
+
 @keyframes leaf-drift {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-14px); }

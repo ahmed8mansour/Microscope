@@ -92,8 +92,8 @@ export default function InstrumentViewer() {
         >
           <ambientLight intensity={0.55} />
           <directionalLight position={[3, 4, 5]} intensity={1.15} />
-          <directionalLight position={[-4, 1, 2]} intensity={0.9} color="#CBA6F7" />
-          <directionalLight position={[0, -3, -4]} intensity={0.3} color="#CBA6F7" />
+          <directionalLight position={[-4, 1, 2]} intensity={0.9} color="#BFEBDD" />
+          <directionalLight position={[0, -3, -4]} intensity={0.3} color="#BFEBDD" />
           <Suspense fallback={null}>
             <Model reduced={reduced} />
           </Suspense>
